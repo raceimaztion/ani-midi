@@ -51,17 +51,31 @@ public class MainWindow implements GLEventListener
 	{
 		// TODO Auto-generated method stub
 		GL gl = drawable.getGL();
+    
+    gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT);
 		
 		//gl.glColor3f(0.6f, 0.4f, 0.5f);
 		gl.glColor3f(1, 1, 1);
 		
+    gl.glDisable(GL.GL_DEPTH_TEST);
+    
 		gl.glBegin(GL.GL_QUADS);
-		gl.glVertex3f(-1, 0, -1);
+    // One way round:
+    gl.glVertex3f(1, 0, 1);
 		gl.glVertex3f(1, 0, -1);
-		gl.glVertex3f(1, 0, 1);
+    gl.glVertex3f(-1, 0, -1);
 		gl.glVertex3f(-1, 0, 1);
+    // Other way round:
+    gl.glVertex3f(-1, 0, -1);
+    gl.glVertex3f(1, 0, -1);
+    gl.glVertex3f(1, 0, 1);
+    gl.glVertex3f(-1, 0, 1);
 		gl.glEnd();
 		
+    gl.glEnable(GL.GL_DEPTH_TEST);
+    
+    //drawable.swapBuffers();
+    
 		if (!hasDrawn)
 		{
 			System.out.println("Drawn once!");
@@ -78,7 +92,8 @@ public class MainWindow implements GLEventListener
 	public void init(GLAutoDrawable drawable)
 	{
 		// TODO Auto-generated method stub
-		
+		GL gl = drawable.getGL();
+    gl.glClearColor(0, 0, 0.3f, 1);
 	}
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
@@ -86,6 +101,7 @@ public class MainWindow implements GLEventListener
 		GL gl = drawable.getGL();
 		
 		camera.apply(gl, glu, width, height);
+    System.out.println("Resized.");
 	}
 	
 	public static void main(String[] args)
