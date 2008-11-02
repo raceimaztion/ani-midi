@@ -50,8 +50,8 @@ public class Camera
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		glu.gluLookAt(0, 0, 0,  // Eye location
-		              0, 0, 1,  // Look at
-		              0, 1, 0); // Up
+		              0, 1, 0,  // Look at
+		              0, 0, 1); // Up
 		pos.applyTranslation(gl);
 		//gl.glRotatef(rot.y, 1, 0, 0);
 		//gl.glRotatef(rot.x, 0, 0, 1);

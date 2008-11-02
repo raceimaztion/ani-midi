@@ -27,7 +27,7 @@ public class MainWindow implements GLEventListener
 		
 		glu = new GLU();
 		camera = new Camera();
-		camera.move(0, -3, 5);
+		camera.move(0, 3, 0);
 		
 		mainWindow.getContentPane().add(drawingCanvas, BorderLayout.CENTER);
 		mainWindow.pack();
@@ -46,11 +46,9 @@ public class MainWindow implements GLEventListener
 	
 	public void display(GLAutoDrawable drawable)
 	{
-		// TODO Auto-generated method stub
 		GL gl = drawable.getGL();
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT);
 		
-		// gl.glColor3f(0.6f, 0.4f, 0.5f);
 		gl.glColor3f(1, 1, 1);
 		
 		gl.glBegin(GL.GL_QUADS);
@@ -59,11 +57,6 @@ public class MainWindow implements GLEventListener
 		gl.glVertex3f(1, 0, -1);
 		gl.glVertex3f(-1, 0, -1);
 		gl.glVertex3f(-1, 0, 1);
-		// Other way round:
-		/*gl.glVertex3f(-1, 0, -1);
-		gl.glVertex3f(1, 0, -1);
-		gl.glVertex3f(1, 0, 1);
-		gl.glVertex3f(-1, 0, 1);*/
 		gl.glEnd();
 		
 		gl.glFlush();
@@ -98,26 +91,11 @@ public class MainWindow implements GLEventListener
 	{
 		GL gl = drawable.getGL();
 		camera.apply(gl, glu, width, height);
-		
-		/*float h = (float)width/(float)height;
-		
-		gl.glMatrixMode(GL.GL_PROJECTION);
-		gl.glLoadIdentity();
-		gl.glFrustum(-1, 1, -h, h, 0.1f, 5000);
-		gl.glMatrixMode(GL.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		glu.gluLookAt(0, 0, 0,  // Eye location
-		              0, 0, 1,  // Look at
-		              0, 1, 0); // Up
-		gl.glTranslatef(0, -5, 5); //*/
-		
-		System.out.println("Resized.");
 	}
 	
 	public static void main(String[] args)
 	{
-		// Because we're using the heavy-weight GLCanvas, all popups need to be
-		// in front of the canvas
+		// Because we're using the heavy-weight GLCanvas, all popups need to be in front of the canvas
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		MainWindow window = new MainWindow();
 		window.show();
