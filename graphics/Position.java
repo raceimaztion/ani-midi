@@ -28,6 +28,22 @@ public class Position
 		gl.glTranslatef(x, y, z);
 	}
 	
+	public void applyNormal(GL gl)
+	{
+		gl.glNormal3f(x, y, z);
+	}
+	
+	public void applyVertex(GL gl)
+	{
+		gl.glVertex3f(x, y, z);
+	}
+	
+	public void applyLightPos(GL gl, int lightNumber, float distance)
+	{
+		float[] pos = new float[] {x, y, z, distance};
+		gl.glLightfv(lightNumber, GL.GL_POSITION, pos, 0);
+	}
+	
 	public float getLength()
 	{
 		return (float)Math.sqrt(x*x + y*y + z*z);

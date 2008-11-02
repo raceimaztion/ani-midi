@@ -5,6 +5,7 @@ import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 // Project imports
 import graphics.*;
+import graphics.Shape;
 
 public class MainWindow implements GLEventListener
 {
@@ -12,10 +13,12 @@ public class MainWindow implements GLEventListener
 	protected GLCanvas drawingCanvas;
 	protected GLU glu;
 	protected Camera camera;
-	protected boolean hasDrawn = false;
+	protected Shape shape;
 	
 	public MainWindow()
 	{
+		shape = Shape.loadWavefrontObject("models/instruments/bell-holder.obj");
+		
 		mainWindow = new JFrame("MIDI Visualizer - by Daryl Van Humbeck");
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -49,25 +52,13 @@ public class MainWindow implements GLEventListener
 		GL gl = drawable.getGL();
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT);
 		
-		gl.glColor3f(1, 1, 1);
+		gl.glColor3f(0.5f, 0.5f, 0.5f);
 		
-		gl.glBegin(GL.GL_QUADS);
-		// One way round:
-		gl.glVertex3f(1, 0, 1);
-		gl.glVertex3f(1, 0, -1);
-		gl.glVertex3f(-1, 0, -1);
-		gl.glVertex3f(-1, 0, 1);
-		gl.glEnd();
+		shape.draw(gl);
 		
 		gl.glFlush();
 		if (!drawable.getAutoSwapBufferMode())
 			drawable.swapBuffers();
-		
-		if (!hasDrawn)
-		{
-			System.out.println("Drawn once!");
-			hasDrawn = true;
-		}
 	}
 	
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged)
@@ -85,6 +76,10 @@ public class MainWindow implements GLEventListener
 		
 		gl.setSwapInterval(0);
 		gl.glEnable(GL.GL_DEPTH_TEST);
+		
+		gl.glEnable(GL.GL_LIGHTING);
+		gl.glEnable(GL.GL_LIGHT0);
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, new float[]{5, 5, 5}, 0);
 	}
 	
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
