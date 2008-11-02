@@ -52,7 +52,6 @@ public class MainWindow implements GLEventListener
 		
 		// gl.glColor3f(0.6f, 0.4f, 0.5f);
 		gl.glColor3f(1, 1, 1);
-		gl.glDisable(GL.GL_DEPTH_TEST);
 		
 		gl.glBegin(GL.GL_QUADS);
 		// One way round:
@@ -66,8 +65,6 @@ public class MainWindow implements GLEventListener
 		gl.glVertex3f(1, 0, 1);
 		gl.glVertex3f(-1, 0, 1);*/
 		gl.glEnd();
-		
-		gl.glEnable(GL.GL_DEPTH_TEST);
 		
 		gl.glFlush();
 		if (!drawable.getAutoSwapBufferMode())
@@ -94,7 +91,7 @@ public class MainWindow implements GLEventListener
 		gl.glClearColor(0, 0, 0.2f, 1);
 		
 		gl.setSwapInterval(0);
-		
+		gl.glEnable(GL.GL_DEPTH_TEST);
 	}
 	
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
