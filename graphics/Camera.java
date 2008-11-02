@@ -24,6 +24,11 @@ public class Camera
 		pos.move(dx, dy, dz);
 	}
 	
+	public void move(Position p)
+	{
+		pos.move(p);
+	}
+	
 	public void rotate(float dx, float dy, float dz)
 	{
 		rot.move(dx, dy, dz);
@@ -40,7 +45,7 @@ public class Camera
 	{
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(50, (double)width/height, 0.1f, 50000);
+		glu.gluPerspective(90, (double)width/height, 0.1f, 50000);
 		
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
