@@ -10,7 +10,20 @@ public class Light
 	
 	public Light()
 	{
-		
+		ambient = Color.darkGray;
+		diffuse = Color.lightGray;
+		specular = Color.white;
+		pos = new Position();
+	}
+	
+	public Position getPosition()
+	{
+		return pos;
+	}
+	
+	public void setPosition(Position pos)
+	{
+		this.pos = pos;
 	}
 	
 	public Color getAmbient()

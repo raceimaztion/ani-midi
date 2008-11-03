@@ -1,6 +1,6 @@
 import java.awt.*;
 import javax.swing.*;
-// Jogl imports:
+// Jogl imports
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 // Project imports
@@ -13,11 +13,21 @@ public class MainWindow implements GLEventListener
 	protected GLCanvas drawingCanvas;
 	protected GLU glu;
 	protected Camera camera;
+	
+	// Scene objects:
 	protected Shape shape;
+	protected Light light;
+	protected MaterialLibrary materialLibrary;
 	
 	public MainWindow()
 	{
+		materialLibrary = new MaterialLibrary("models/instruments");
 		shape = Shape.loadWavefrontObject("models/instruments/bell-holder.obj");
+		shape.setRotation(new SingleRotation(120, 0, 0, 1));
+		light = new Light();
+		light.setPosition(new Position(5, 5, 5));
+		light.setAmbient(Color.gray);
+		shape.setMaterial(materialLibrary.getMaterial("Metal"));
 		
 		mainWindow = new JFrame("MIDI Visualizer - by Daryl Van Humbeck");
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -30,7 +40,7 @@ public class MainWindow implements GLEventListener
 		
 		glu = new GLU();
 		camera = new Camera();
-		camera.move(0, 3, 0);
+		camera.move(0, 2, 0);
 		
 		mainWindow.getContentPane().add(drawingCanvas, BorderLayout.CENTER);
 		mainWindow.pack();
@@ -52,7 +62,7 @@ public class MainWindow implements GLEventListener
 		GL gl = drawable.getGL();
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT);
 		
-		gl.glColor3f(0.5f, 0.5f, 0.5f);
+		//gl.glColor3f(0.5f, 0.5f, 0.5f);
 		
 		shape.draw(gl);
 		
@@ -72,14 +82,15 @@ public class MainWindow implements GLEventListener
 		drawable.setGL(new DebugGL(drawable.getGL()));
 		
 		GL gl = drawable.getGL();
-		gl.glClearColor(0, 0, 0.2f, 1);
+		gl.glClearColor(0, 0, 0.3f, 1);
 		
 		gl.setSwapInterval(0);
 		gl.glEnable(GL.GL_DEPTH_TEST);
+		gl.glEnable(GL.GL_NORMALIZE);
 		
 		gl.glEnable(GL.GL_LIGHTING);
 		gl.glEnable(GL.GL_LIGHT0);
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, new float[]{5, 5, 5}, 0);
+		light.apply(gl, GL.GL_LIGHT0);
 	}
 	
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
@@ -92,6 +103,7 @@ public class MainWindow implements GLEventListener
 	{
 		// Because we're using the heavy-weight GLCanvas, all popups need to be in front of the canvas
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+		
 		MainWindow window = new MainWindow();
 		window.show();
 	}

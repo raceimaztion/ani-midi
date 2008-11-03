@@ -2,22 +2,29 @@ package graphics;
 
 import java.io.*;
 import java.util.*;
-import javax.media.opengl.*;
+import javax.media.opengl.GL;
 
 public class Shape
 {
 	protected Position position;
+	protected Rotation rotation;
+	
 	protected Vector<Position> vertices;
 	protected Vector<Position> normals;
 	protected Vector<Integer[]> polygons;
 	protected Vector<Integer[]> polyNormals;
 	protected Vector<Boolean> polySmooth;
+	
 	protected String name;
 	protected String materialName;
+	
+	protected Material material;
 
 	protected Shape()
 	{
 		position = new Position();
+		rotation = new SingleRotation();
+		
 		vertices = new Vector<Position>();
 		normals = new Vector<Position>();
 		polygons = new Vector<Integer[]>();
@@ -29,6 +36,10 @@ public class Shape
 	{
 		gl.glPushMatrix();
 		position.applyTranslation(gl);
+		rotation.apply(gl);
+		
+		if (material != null)
+			material.apply(gl);
 		
 		boolean smooth;
 		
@@ -56,6 +67,46 @@ public class Shape
 	public String getName()
 	{
 		return name;
+	}
+	
+	public String getMaterialName()
+	{
+		return materialName;
+	}
+	
+	public Position getPosition()
+	{
+		return position;
+	}
+	
+	public void setPosition(Position pos)
+	{
+		position = pos;
+	}
+	
+	public Rotation getRotation()
+	{
+		return rotation;
+	}
+	
+	public void setRotation(Rotation rotation)
+	{
+		this.rotation = rotation;
+	}
+	
+	public Material getMaterial()
+	{
+		return material;
+	}
+	
+	/**
+	 * Sets the material to use on this object.
+	 * Note: When the material is set, it gets set automatically just before drawing the object
+	 * @param material	The material to use for this shape
+	 */
+	public void setMaterial(Material material)
+	{
+		this.material = material;
 	}
 
 	/* ************************************* *
@@ -141,7 +192,7 @@ public class Shape
 		}
 		catch (IOException er)
 		{
-			System.err.printf("Error reading from file '%s'!\n", fileName);
+			System.err.printf("Error reading mesh from file '%s'!\n", fileName);
 			return null;
 		}
 
