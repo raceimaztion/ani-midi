@@ -92,6 +92,8 @@ public class MidiTest
 			Dimension d = new Dimension(640, 480);
 			scroller.setPreferredSize(d);
 			scroller.setMinimumSize(d);
+			scroller.getHorizontalScrollBar().setUnitIncrement(8);
+			scroller.getVerticalScrollBar().setUnitIncrement(8);
 			frame.getContentPane().add(scroller, BorderLayout.CENTER);
 			
 			//frame.getContentPane().add(new JLabel(new ImageIcon(image)));

@@ -10,9 +10,9 @@ public class MidiUtils
 {
 	public static BufferedImage createImageFromMidiFile(Sequence midi)
 	{
-		int width = (int)midi.getTickLength() * 2;
+		int width = (int)midi.getTickLength();
 		int height = 2 * 128;
-		int scale = 2;
+		int scale = 1;
 		
 		long noteOn = 0, noteOff = 0;
 		
@@ -86,13 +86,6 @@ public class MidiUtils
 				if (oldestTime < cur.get(j).getTick())
 					oldestTime = cur.get(j).getTick();
 			} // end for each message
-			
-			/*for (int note=0; note < 128; note++)
-			{
-				if (noteList[note] < 0)  continue;
-				
-				drawLine(g, (int)noteList[note], (int)oldestTime, note);
-			}*/
 		} // end for each track
 		
 		result.flush();
