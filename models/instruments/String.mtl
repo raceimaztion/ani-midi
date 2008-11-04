@@ -1,0 +1,12 @@
+# Blender3D MTL File: string-plucked.blend
+# Material Count: 1
+newmtl String
+Ns 390.196078
+Ka 0.000000 0.000000 0.000000
+Kd 0.320000 0.320000 0.320000
+Ks 0.800000 0.800000 0.800000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
