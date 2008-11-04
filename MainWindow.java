@@ -1,9 +1,10 @@
 import java.awt.*;
 import javax.swing.*;
-// Jogl imports
+import java.util.Vector;
+
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
-// Project imports
+
 import graphics.*;
 import graphics.Shape;
 
@@ -15,19 +16,25 @@ public class MainWindow implements GLEventListener
 	protected Camera camera;
 	
 	// Scene objects:
-	protected Shape shape;
+	protected Vector<Shape> shapes;
 	protected Light light;
 	protected MaterialLibrary materialLibrary;
 	
 	public MainWindow()
 	{
 		materialLibrary = new MaterialLibrary("models/instruments");
-		shape = Shape.loadWavefrontObject("models/instruments/bell-holder.obj");
-		shape.setRotation(new SingleRotation(120, 0, 0, 1));
+		materialLibrary.loadAllMaterials();
+		
+		shapes = new Vector<Shape>();
+		shapes.add(Shape.loadWavefrontObject("models/instruments/bell-holder.obj"));
+		shapes.add(Shape.loadWavefrontObject("models/instruments/bell-tube.obj"));
+		shapes.add(Shape.loadWavefrontObject("models/instruments/bell-hammer.obj"));
+		for (Shape s : shapes)
+			s.setMaterial(materialLibrary.getMaterial(s.getMaterialName()));
+		
 		light = new Light();
 		light.setPosition(new Position(5, 5, 5));
 		light.setAmbient(Color.gray);
-		shape.setMaterial(materialLibrary.getMaterial("Metal"));
 		
 		mainWindow = new JFrame("MIDI Visualizer - by Daryl Van Humbeck");
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,7 +71,8 @@ public class MainWindow implements GLEventListener
 		
 		//gl.glColor3f(0.5f, 0.5f, 0.5f);
 		
-		shape.draw(gl);
+		for (Shape shape : shapes)
+			shape.draw(gl);
 		
 		gl.glFlush();
 		if (!drawable.getAutoSwapBufferMode())
@@ -78,7 +86,6 @@ public class MainWindow implements GLEventListener
 	
 	public void init(GLAutoDrawable drawable)
 	{
-		// TODO Auto-generated method stub
 		drawable.setGL(new DebugGL(drawable.getGL()));
 		
 		GL gl = drawable.getGL();
@@ -87,6 +94,7 @@ public class MainWindow implements GLEventListener
 		gl.setSwapInterval(0);
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glEnable(GL.GL_NORMALIZE);
+		gl.glShadeModel(GL.GL_SMOOTH);
 		
 		gl.glEnable(GL.GL_LIGHTING);
 		gl.glEnable(GL.GL_LIGHT0);

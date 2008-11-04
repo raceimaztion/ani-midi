@@ -4,11 +4,8 @@ import java.io.*;
 import java.util.*;
 import javax.media.opengl.GL;
 
-public class Shape
+public class Shape extends EmptyObject
 {
-	protected Position position;
-	protected Rotation rotation;
-	
 	protected Vector<Position> vertices;
 	protected Vector<Position> normals;
 	protected Vector<Integer[]> polygons;
@@ -17,19 +14,19 @@ public class Shape
 	
 	protected String name;
 	protected String materialName;
+	protected boolean askLibraryForMaterial;
 	
 	protected Material material;
 
 	protected Shape()
 	{
-		position = new Position();
-		rotation = new SingleRotation();
-		
-		vertices = new Vector<Position>();
 		normals = new Vector<Position>();
+		vertices = new Vector<Position>();
 		polygons = new Vector<Integer[]>();
 		polyNormals = new Vector<Integer[]>();
 		polySmooth = new Vector<Boolean>();
+		
+		askLibraryForMaterial = false;
 	}
 
 	public void draw(GL gl)
@@ -64,6 +61,16 @@ public class Shape
 		gl.glPopMatrix();
 	}
 	
+	public boolean getAskLibraryForMaterial()
+	{
+		return askLibraryForMaterial;
+	}
+	
+	public void setAskLibraryForMaterial(boolean flag)
+	{
+		askLibraryForMaterial = flag;
+	}
+	
 	public String getName()
 	{
 		return name;
@@ -72,26 +79,6 @@ public class Shape
 	public String getMaterialName()
 	{
 		return materialName;
-	}
-	
-	public Position getPosition()
-	{
-		return position;
-	}
-	
-	public void setPosition(Position pos)
-	{
-		position = pos;
-	}
-	
-	public Rotation getRotation()
-	{
-		return rotation;
-	}
-	
-	public void setRotation(Rotation rotation)
-	{
-		this.rotation = rotation;
 	}
 	
 	public Material getMaterial()
@@ -154,9 +141,12 @@ public class Shape
 				{
 					result.materialName = line.substring("usemtl ".length());
 				}
-				else if (line.startsWith("s 1"))
+				else if (line.startsWith("s "))
 				{
-					smooth = true;
+					if (line.startsWith("s off") || line.startsWith("s 0"))
+						smooth = false;
+					else
+						smooth = true;
 				}
 				else if (line.startsWith("f "))
 				{
@@ -184,7 +174,6 @@ public class Shape
 					result.polygons.add(indicies);
 					result.polyNormals.add(normals);
 					result.polySmooth.add(smooth);
-					smooth = false;
 				}
 				
 				line = in.readLine();

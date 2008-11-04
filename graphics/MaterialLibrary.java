@@ -24,6 +24,9 @@ public class MaterialLibrary
 		for (File f : list)
 		{
 			m = Material.loadMaterial(f.getPath());
+			if (m == null)
+				continue;
+			System.out.printf("Loaded material '%s'\n", m.getName());
 			materialsList.put(m.getName(), m);
 		}
 	}

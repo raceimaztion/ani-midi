@@ -34,12 +34,17 @@ public class Camera
 		rot.move(dx, dy, dz);
 	}
 	
+	public void rotate(Position p)
+	{
+		rot.move(p);
+	}
+	
 	/**
 	 * Apply the camera to the current scene
-	 * @param gl
-	 * @param glu
-	 * @param width
-	 * @param height
+	 * @param gl		The GL context to use for rendering
+	 * @param glu		The GLU context to use for rendering
+	 * @param width		The width of the display in pixels
+	 * @param height	The height of the display in pixels
 	 */
 	public void apply(GL gl, GLU glu, int width, int height)
 	{
