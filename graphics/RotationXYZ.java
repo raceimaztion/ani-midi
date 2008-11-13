@@ -2,7 +2,7 @@ package graphics;
 
 import javax.media.opengl.GL;
 
-public class RotationXYZ implements Rotation
+public class RotationXYZ extends Rotation
 {
 	protected float rx, ry, rz;
 	

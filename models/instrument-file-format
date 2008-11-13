@@ -1,0 +1,19 @@
+instrument:	The text-name of this instrument
+patches:	The patch numbers that this instrument can be used for
+shape:		The file that contains the shape of this node. Also goes down a heirarchy level
+roll:		The roll that this part has:
+	holder		Static object that does nothing
+	hammer		Strikes 
+	swings		This shape swings after getting hit by a "hammer"
+	string		A string that vibrates after getting hit by a "hamer"
+stretch:	This shape will stretch along the specified axis
+offset:		How far away from the parent object's center this part is
+rotation:	The amount this part is rotated from the parent's 
+pop:		Go up a heirarchy level
+
+animation:	The start of an animation for the last object defined.
+	The first float defines the total time taken for this animation.
+	The second float indicates when this object triggers strings and swings
+step %f %s [etc]:	Information about this step of the animation
+	First float is the time relative to the beginning of this animation that this step applies to 
+	Second parameter is either "rot" or "move", and what comes after is values for it

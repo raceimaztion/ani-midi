@@ -109,6 +109,18 @@ public class Position
 	}
 	
 	/**
+	 * Move by some fraction of a position
+	 * @param p			The position to add
+	 * @param amount		The amount to scale by
+	 */
+	public void move(Position p, float amount)
+	{
+		x += p.x*amount;
+		y += p.y*amount;
+		z += p.z*amount;
+	}
+	
+	/**
 	 * Add the specified coordinates to this and return the results
 	 * @param dx
 	 * @param dy
@@ -140,5 +152,10 @@ public class Position
 	public Position subtract(Position p)
 	{
 		return new Position(x - p.x, y - p.y, z - p.z);
+	}
+	
+	public static Position parsePosition(String s)
+	{
+		return null;
 	}
 }
