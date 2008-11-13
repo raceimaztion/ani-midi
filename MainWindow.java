@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import java.util.Vector;
 
@@ -8,12 +9,18 @@ import javax.media.opengl.glu.*;
 import graphics.*;
 import graphics.Shape;
 
-public class MainWindow implements GLEventListener
+public class MainWindow implements GLEventListener, ActionListener
 {
+	public static final int TIMER_TICK = 100;
+	
 	protected JFrame mainWindow;
 	protected GLCanvas drawingCanvas;
 	protected GLU glu;
 	protected Camera camera;
+	
+	// Animation and timing:
+	protected Timer timer;
+	protected long lastTickTime;
 	
 	// Scene objects:
 	protected Vector<Shape> shapes;
@@ -52,6 +59,31 @@ public class MainWindow implements GLEventListener
 		mainWindow.getContentPane().add(drawingCanvas, BorderLayout.CENTER);
 		mainWindow.pack();
 		mainWindow.setLocationRelativeTo(null);
+		
+		timer = new Timer(TIMER_TICK, this);
+		timer.start();
+	}
+	
+	public void actionPerformed(ActionEvent e)
+	{
+		Object source = e.getSource();
+		
+		if (source.equals(timer))
+		{
+			// This is a timer tick event
+			long thisTick = System.currentTimeMillis();
+			float dTime = 0.001f*(thisTick - lastTickTime);
+			boolean needUpdate = false;
+			
+			for (Shape s : shapes)
+			{
+				if (s.animate(dTime))
+					needUpdate = true;
+			}
+			
+			if (needUpdate)
+				mainWindow.repaint();
+		}
 	}
 	
 	public void show()

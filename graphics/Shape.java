@@ -57,8 +57,34 @@ public class Shape extends EmptyObject
 			}
 			gl.glEnd();
 		}
-
+		
 		gl.glPopMatrix();
+	}
+	
+	public void drawNoTransformation(GL gl)
+	{
+		if (material != null)
+			material.apply(gl);
+		
+		boolean smooth;
+		
+		for (int nPoly=0; nPoly < polygons.size(); nPoly++)
+		{
+			smooth = polySmooth.get(nPoly);
+			if (!smooth)
+				normals.get(polyNormals.get(nPoly)[0]).applyNormal(gl);
+			
+			gl.glBegin(GL.GL_POLYGON);
+			Integer[] verts = polygons.get(nPoly);
+			Integer[] norms = polyNormals.get(nPoly);
+			for (int i=0; i < verts.length; i++)
+			{
+				if (smooth)
+					normals.get(norms[i]).applyNormal(gl);
+				vertices.get(verts[i]).applyVertex(gl);
+			}
+			gl.glEnd();
+		}
 	}
 	
 	public boolean getAskLibraryForMaterial()

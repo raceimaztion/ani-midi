@@ -31,6 +31,16 @@ public class EmptyObject implements Iterable<EmptyObject>
 		
 	}
 	
+	/**
+	 * 
+	 * @param dTime	The amount of time (in seconds) that have elapsed since the last update
+	 * @return		Whether this object has changed enought to warrant a repaint
+	 */
+	public boolean animate(float dTime)
+	{
+		return false;
+	}
+	
 	public Position getPosition()
 	{
 		return position;

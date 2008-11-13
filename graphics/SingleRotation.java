@@ -2,7 +2,7 @@ package graphics;
 
 import javax.media.opengl.GL;
 
-public class SingleRotation implements Rotation
+public class SingleRotation extends Rotation
 {
 	protected float amount, rx, ry, rz;
 	
