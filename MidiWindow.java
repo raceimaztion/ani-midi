@@ -8,7 +8,7 @@ import javax.media.opengl.glu.*;
 import graphics.*;
 import instrument.*;
 
-public class MainWindow implements GLEventListener, ActionListener
+public class MidiWindow implements GLEventListener, ActionListener
 {
 	public static final int TIMER_TICK = 10;
 	
@@ -27,7 +27,7 @@ public class MainWindow implements GLEventListener, ActionListener
 	protected Light light;
 	protected MaterialLibrary materialLibrary;
 	
-	public MainWindow()
+	public MidiWindow()
 	{
 		materialLibrary = new MaterialLibrary("models/instruments");
 		materialLibrary.loadAllMaterials();
@@ -143,7 +143,7 @@ public class MainWindow implements GLEventListener, ActionListener
 		// Because we're using the heavy-weight GLCanvas, all popups need to be in front of the canvas
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		
-		MainWindow window = new MainWindow();
+		MidiWindow window = new MidiWindow();
 		window.show();
 	}
 }
