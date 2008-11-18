@@ -4,12 +4,8 @@ import java.util.Vector;
 import javax.media.opengl.GL;
 import graphics.*;
 
-public class InstrumentPart
+public class InstrumentPart implements Constants
 {
-	public static final int AXIS_X = 0x1001;
-	public static final int AXIS_Y = 0x1002;
-	public static final int AXIS_Z = 0x1004;
-	
 	/**
 	 * Does nothing
 	 */
@@ -36,6 +32,7 @@ public class InstrumentPart
 	// Part attributes:
 	protected String roll;
 	protected int stretchAxis;
+	protected Animation animation;
 	
 	public InstrumentPart(Shape s)
 	{
@@ -45,6 +42,18 @@ public class InstrumentPart
 		offset = new Position();
 	}
 	
+	public void assignTextures(MaterialLibrary library)
+	{
+		shape.setMaterial(library.getMaterial(shape.getMaterialName()));
+		for (InstrumentPart p : children)
+			p.assignTextures(library);
+	}
+	
+	public Vector<InstrumentPart> getChildren()
+	{
+		return children;
+	}
+	
 	/**
 	 * Draw this part of the virtual instrument
 	 * @param gl	The graphics context to use
@@ -52,9 +61,10 @@ public class InstrumentPart
 	 */
 	public void draw(GL gl, int note)
 	{
+		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glPushMatrix();
 		
-		if (stretchAxis != 0)
+		/*if (stretchAxis != 0)
 		{
 			gl.glPushMatrix();
 			float scale = 1.0f + (float)note / 64;
@@ -64,7 +74,7 @@ public class InstrumentPart
 				gl.glScalef(1, scale, 1);
 			if ((stretchAxis & AXIS_Z) == AXIS_Z)
 				gl.glScalef(1, 1, scale);
-		}
+		}*/
 		
 		if (offset != null)
 			offset.applyTranslation(gl);
@@ -73,8 +83,8 @@ public class InstrumentPart
 		
 		shape.drawNoTransformation(gl);
 		
-		if (stretchAxis != 0)
-			gl.glPopMatrix();
+//		if (stretchAxis != 0)
+//			gl.glPopMatrix();
 		
 		for (InstrumentPart part : children)
 			part.draw(gl, note);
@@ -84,11 +94,30 @@ public class InstrumentPart
 	
 	public boolean animate(float dTime, float currentTime)
 	{
-		return false;
+		boolean needUpdate = false;
+		
+		if (animation != null && animation.animate(dTime))
+			needUpdate = true;
+		
+		for (InstrumentPart p : children)
+			if (p.animate(dTime, currentTime))
+				needUpdate = true;
+		
+		return needUpdate;
 	}
 	
 	public void addChild(InstrumentPart child)
 	{
 		children.add(child);
+	}
+
+	public Animation getAnimation()
+	{
+		return animation;
+	}
+
+	public void setAnimation(Animation animation)
+	{
+		this.animation = animation;
 	}
 }

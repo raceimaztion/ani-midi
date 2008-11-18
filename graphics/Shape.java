@@ -112,6 +112,11 @@ public class Shape extends EmptyObject
 		return material;
 	}
 	
+	public Vector<Position> getVertices()
+	{
+		return vertices;
+	}
+	
 	/**
 	 * Sets the material to use on this object.
 	 * Note: When the material is set, it gets set automatically just before drawing the object

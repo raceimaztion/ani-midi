@@ -50,7 +50,7 @@ public class Camera
 	{
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(90, (double)width/height, 0.1f, 50000);
+		glu.gluPerspective(90, (double)width/height, 0.001f, 50000);
 		
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();

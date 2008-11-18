@@ -1,17 +1,16 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.Vector;
 
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
 import graphics.*;
-import graphics.Shape;
+import instrument.*;
 
 public class MainWindow implements GLEventListener, ActionListener
 {
-	public static final int TIMER_TICK = 100;
+	public static final int TIMER_TICK = 10;
 	
 	protected JFrame mainWindow;
 	protected GLCanvas drawingCanvas;
@@ -23,7 +22,7 @@ public class MainWindow implements GLEventListener, ActionListener
 	protected long lastTickTime;
 	
 	// Scene objects:
-	protected Vector<Shape> shapes;
+	protected VirtualInstrument instrument;
 	protected Light light;
 	protected MaterialLibrary materialLibrary;
 	
@@ -32,12 +31,13 @@ public class MainWindow implements GLEventListener, ActionListener
 		materialLibrary = new MaterialLibrary("models/instruments");
 		materialLibrary.loadAllMaterials();
 		
-		shapes = new Vector<Shape>();
-		shapes.add(Shape.loadWavefrontObject("models/instruments/bell-holder.obj"));
-		shapes.add(Shape.loadWavefrontObject("models/instruments/bell-tube.obj"));
-		shapes.add(Shape.loadWavefrontObject("models/instruments/bell-hammer.obj"));
-		for (Shape s : shapes)
-			s.setMaterial(materialLibrary.getMaterial(s.getMaterialName()));
+		instrument = VirtualInstrument.loadVirtualInstrument("models/tubular-bells.ins");
+		instrument.assignTextures(materialLibrary);
+		
+		InstrumentPart part = instrument.getParts().get(0).getChildren().get(0);
+		PendulumAnimation ani = new PendulumAnimation(part, Constants.AXIS_Y);
+		part.setAnimation(ani);
+		ani.strike(10);
 		
 		light = new Light();
 		light.setPosition(new Position(5, 5, 5));
@@ -48,6 +48,7 @@ public class MainWindow implements GLEventListener, ActionListener
 		
 		drawingCanvas = new GLCanvas();
 		drawingCanvas.addGLEventListener(this);
+		drawingCanvas.setAutoSwapBufferMode(false);
 		Dimension d = new Dimension(640, 480);
 		drawingCanvas.setPreferredSize(d);
 		drawingCanvas.setMinimumSize(d);
@@ -60,6 +61,7 @@ public class MainWindow implements GLEventListener, ActionListener
 		mainWindow.pack();
 		mainWindow.setLocationRelativeTo(null);
 		
+		lastTickTime = System.currentTimeMillis();
 		timer = new Timer(TIMER_TICK, this);
 		timer.start();
 	}
@@ -75,14 +77,11 @@ public class MainWindow implements GLEventListener, ActionListener
 			float dTime = 0.001f*(thisTick - lastTickTime);
 			boolean needUpdate = false;
 			
-			for (Shape s : shapes)
-			{
-				if (s.animate(dTime))
-					needUpdate = true;
-			}
+			needUpdate = instrument.animate(dTime);
 			
 			if (needUpdate)
-				mainWindow.repaint();
+				drawingCanvas.display();
+			lastTickTime = thisTick;
 		}
 	}
 	
@@ -101,10 +100,7 @@ public class MainWindow implements GLEventListener, ActionListener
 		GL gl = drawable.getGL();
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT);
 		
-		//gl.glColor3f(0.5f, 0.5f, 0.5f);
-		
-		for (Shape shape : shapes)
-			shape.draw(gl);
+		instrument.draw(gl);
 		
 		gl.glFlush();
 		if (!drawable.getAutoSwapBufferMode())
