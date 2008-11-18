@@ -4,6 +4,9 @@ import java.io.*;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.Scanner;
+
+import javax.media.opengl.GL;
+
 import graphics.*;
 
 public class VirtualInstrument
@@ -18,12 +21,47 @@ public class VirtualInstrument
 	
 	protected VirtualInstrument()
 	{
-		parent = null;
+		this(null);
 	}
 	
 	protected VirtualInstrument(InstrumentPart parent)
 	{
 		this.parent = parent;
+		setup();
+	}
+	
+	protected void setup()
+	{
+		supportedPatches = new Vector<Integer>();
+		parts = new Vector<InstrumentPart>();
+	}
+	
+	public void assignTextures(MaterialLibrary library)
+	{
+		for (InstrumentPart p : parts)
+			p.assignTextures(library);
+	}
+	
+	public Vector<InstrumentPart> getParts()
+	{
+		return parts;
+	}
+	
+	public boolean animate(float dTime)
+	{
+		boolean needUpdate = false;
+		
+		for (InstrumentPart p : parts)
+			if (p.animate(dTime, 0))
+				needUpdate = true;
+		
+		return needUpdate;
+	}
+	
+	public void draw(GL gl)
+	{
+		for (InstrumentPart p : parts)
+			p.draw(gl, 127);
 	}
 	
 	public static VirtualInstrument loadVirtualInstrument(String file)
@@ -55,7 +93,7 @@ public class VirtualInstrument
 				// The instruments that we can use this instrument for
 				else if (line.startsWith("patches "))
 				{
-					for (String s : line.substring("patches ".length()).split(" +"))
+					for (String s : line.substring("patches ".length()).split(" "))
 					{
 						result.supportedPatches.add(Integer.parseInt(s));
 					}
@@ -66,13 +104,19 @@ public class VirtualInstrument
 					if (line.equals("shape empty"))
 					{
 						InstrumentPart p = new InstrumentPart(null);
-						stack.peek().addChild(p);
+						if (stack.size() > 0)
+							stack.peek().addChild(p);
+						else
+							result.parts.add(p);
 						stack.push(p);
 					}
 					else
 					{
 						InstrumentPart p = new InstrumentPart(Shape.loadWavefrontObject("models/instruments/" + line.substring("shape ".length())));
-						stack.peek().addChild(p);
+						if (stack.size() > 0)
+							stack.peek().addChild(p);
+						else
+							result.parts.add(p);
 						stack.push(p);
 					}
 				}
@@ -101,6 +145,17 @@ public class VirtualInstrument
 				{
 					Scanner scan = new Scanner(line.substring("offset ".length()));
 					stack.peek().offset = new Position(scan.nextFloat(), scan.nextFloat(), scan.nextFloat());
+				}
+				// Does this part have an offset from its parent already?
+				else if (line.startsWith("offset_fix "))
+				{
+					Scanner scan = new Scanner(line.substring("offset_fix ".length()));
+					stack.peek().offset = new Position(scan.nextFloat(), scan.nextFloat(), scan.nextFloat());
+					Position offset = stack.peek().offset;
+					for (Position p : stack.peek().shape.getVertices())
+					{
+						p.move(offset, -1);
+					}
 				}
 				// Is this part rotated in relation to its parent?
 				else if (line.startsWith("rotation "))
