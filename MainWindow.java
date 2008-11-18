@@ -20,6 +20,7 @@ public class MainWindow implements GLEventListener, ActionListener
 	// Animation and timing:
 	protected Timer timer;
 	protected long lastTickTime;
+	protected float totalTime;
 	
 	// Scene objects:
 	protected VirtualInstrument instrument;
@@ -61,6 +62,7 @@ public class MainWindow implements GLEventListener, ActionListener
 		mainWindow.pack();
 		mainWindow.setLocationRelativeTo(null);
 		
+		totalTime = 0;
 		lastTickTime = System.currentTimeMillis();
 		timer = new Timer(TIMER_TICK, this);
 		timer.start();
@@ -77,11 +79,12 @@ public class MainWindow implements GLEventListener, ActionListener
 			float dTime = 0.001f*(thisTick - lastTickTime);
 			boolean needUpdate = false;
 			
-			needUpdate = instrument.animate(dTime);
+			needUpdate = instrument.animate(dTime, totalTime);
 			
 			if (needUpdate)
 				drawingCanvas.display();
 			lastTickTime = thisTick;
+			totalTime += dTime;
 		}
 	}
 	
@@ -109,7 +112,7 @@ public class MainWindow implements GLEventListener, ActionListener
 	
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged)
 	{
-		// TODO Auto-generated method stub
+		// Not sure if we need to do anything in here
 	}
 	
 	public void init(GLAutoDrawable drawable)
