@@ -7,7 +7,7 @@ public class PendulumAnimation extends Animation implements Constants
 	public static final float DECAY_RATE = 0.25f;
 	
 	protected int affectedAxis;
-	protected float angle, velocity;
+	protected float angle, velocity, speed;
 	protected SingleRotation rotation;
 	
 	/**
@@ -36,17 +36,44 @@ public class PendulumAnimation extends Animation implements Constants
 		part.rotation = rotation;
 		
 		angle = rotation.getRotationAmount();
+		setSpeed(2);
 	}
 	
+	/**
+	 * Apply a new force to this animation
+	 * @param force	The amount of force to add
+	 */
 	public void strike(float force)
 	{
 		velocity += force;
 	}
 	
+	/**
+	 * Set the swing speed of this animation
+	 * @param speed	The new swing speed
+	 */
+	public void setSpeed(float speed)
+	{
+		if (Math.abs(this.speed) > 0.001f)
+		{
+			angle *= this.speed;
+			velocity *= this.speed;
+		}
+		
+		this.speed = speed;
+		angle /= speed;
+		velocity /= speed;
+	}
+	
+	public float getSpeed()
+	{
+		return speed;
+	}
+	
 	public boolean animate(float dTime)
 	{
 		velocity -= angle*dTime;
-		angle += velocity*dTime;
+		angle += velocity*dTime * speed;
 		velocity = velocity * (1 - dTime*DECAY_RATE);
 		
 		rotation.setRotationAmount(angle);

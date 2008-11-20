@@ -10,7 +10,7 @@ import instrument.*;
 
 public class MidiWindow implements GLEventListener, ActionListener
 {
-	public static final int TIMER_TICK = 10;
+	public static final int TIMER_TICK = 20;
 	
 	protected JFrame mainWindow;
 	protected GLCanvas drawingCanvas;
@@ -65,6 +65,7 @@ public class MidiWindow implements GLEventListener, ActionListener
 		totalTime = 0;
 		lastTickTime = System.currentTimeMillis();
 		timer = new Timer(TIMER_TICK, this);
+		timer.setCoalesce(true);
 		timer.start();
 	}
 	
