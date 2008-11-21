@@ -96,7 +96,6 @@ public class MidiTest
 			scroller.getVerticalScrollBar().setUnitIncrement(8);
 			frame.getContentPane().add(scroller, BorderLayout.CENTER);
 			
-			//frame.getContentPane().add(new JLabel(new ImageIcon(image)));
 			frame.pack();
 			frame.setLocationRelativeTo(null);
 			frame.setVisible(true);
