@@ -89,7 +89,7 @@
 79 Whistle
 80 Ocarina
 	Synth lead family
-81 Lead 1 (square)
+81 Lead 1 (square)	Lasers
 82 Lead 2 (sawtooth)
 83 Lead 3 (calliope)
 84 Lead 4 (chiff)
@@ -98,7 +98,7 @@
 87 Lead 7 (fifths)
 88 Lead 8 (bass+lead)
 	Synth pad family
-89 Pad 1 (new age)
+89 Pad 1 (new age)	LED lights
 90 Pad 2 (warm)
 91 Pad 3 (polysynth)
 92 Pad 4 (choir)
@@ -107,7 +107,7 @@
 95 Pad 7 (halo)
 96 Pad 8 (sweep)
 	Synth effects family
-97 FX 1 (rain)
+97 FX 1 (rain)		Don't implement these
 98 FX 2 (soundtrack)
 99 FX 3 (crystal)
 100 FX 4 (atmosphere)
@@ -117,12 +117,12 @@
 104 FX 8 (sci-fi)
 	Ethnic family
 105 Sitar
-106 Banjo
-107 Shamisen
+106 Banjo	Plucked string
+107 Shamisen	
 108 Koto
 109 Kalimba
-110 Bag Pipe
-111 Fiddle
+110 Bag Pipe	Pipes
+111 Fiddle	Plucked string
 112 Shanai
 	Percussive family
 113 Tinkle Bell		Mallet-struck bells
@@ -134,7 +134,7 @@
 119 Synth Drum
 120 Reverse Cymbal
 	Sound effects family
-121 Guitar Fret Noise	Don't implement
+121 Guitar Fret Noise	Don't implement these
 122 Breath Noise
 123 Seashore
 124 Bird Tweet
