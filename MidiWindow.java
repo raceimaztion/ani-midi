@@ -8,9 +8,9 @@ import javax.media.opengl.glu.*;
 import graphics.*;
 import instrument.*;
 
-public class MainWindow implements GLEventListener, ActionListener
+public class MidiWindow implements GLEventListener, ActionListener
 {
-	public static final int TIMER_TICK = 10;
+	public static final int TIMER_TICK = 20;
 	
 	protected JFrame mainWindow;
 	protected GLCanvas drawingCanvas;
@@ -20,13 +20,14 @@ public class MainWindow implements GLEventListener, ActionListener
 	// Animation and timing:
 	protected Timer timer;
 	protected long lastTickTime;
+	protected float totalTime;
 	
 	// Scene objects:
 	protected VirtualInstrument instrument;
 	protected Light light;
 	protected MaterialLibrary materialLibrary;
 	
-	public MainWindow()
+	public MidiWindow()
 	{
 		materialLibrary = new MaterialLibrary("models/instruments");
 		materialLibrary.loadAllMaterials();
@@ -61,8 +62,10 @@ public class MainWindow implements GLEventListener, ActionListener
 		mainWindow.pack();
 		mainWindow.setLocationRelativeTo(null);
 		
+		totalTime = 0;
 		lastTickTime = System.currentTimeMillis();
 		timer = new Timer(TIMER_TICK, this);
+		timer.setCoalesce(true);
 		timer.start();
 	}
 	
@@ -77,11 +80,12 @@ public class MainWindow implements GLEventListener, ActionListener
 			float dTime = 0.001f*(thisTick - lastTickTime);
 			boolean needUpdate = false;
 			
-			needUpdate = instrument.animate(dTime);
+			needUpdate = instrument.animate(dTime, totalTime);
 			
 			if (needUpdate)
 				drawingCanvas.display();
 			lastTickTime = thisTick;
+			totalTime += dTime;
 		}
 	}
 	
@@ -109,7 +113,7 @@ public class MainWindow implements GLEventListener, ActionListener
 	
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged)
 	{
-		// TODO Auto-generated method stub
+		// Not sure if we need to do anything in here
 	}
 	
 	public void init(GLAutoDrawable drawable)
@@ -140,7 +144,7 @@ public class MainWindow implements GLEventListener, ActionListener
 		// Because we're using the heavy-weight GLCanvas, all popups need to be in front of the canvas
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		
-		MainWindow window = new MainWindow();
+		MidiWindow window = new MidiWindow();
 		window.show();
 	}
 }

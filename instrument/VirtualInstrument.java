@@ -47,12 +47,12 @@ public class VirtualInstrument
 		return parts;
 	}
 	
-	public boolean animate(float dTime)
+	public boolean animate(float dTime, float totalTime)
 	{
 		boolean needUpdate = false;
 		
 		for (InstrumentPart p : parts)
-			if (p.animate(dTime, 0))
+			if (p.animate(dTime, totalTime))
 				needUpdate = true;
 		
 		return needUpdate;
