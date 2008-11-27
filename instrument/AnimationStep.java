@@ -40,6 +40,16 @@ public class AnimationStep
 		rot = a.rot;
 	}
 	
+	public boolean sameType(AnimationStep as)
+	{
+		if ((pos == null) != (as.pos == null))
+			return false;
+		if ((rot == null) != (as.rot == null))
+			return false;
+		
+		return true;
+	}
+	
 	public static AnimationStep parseAnimationStep(String line)
 	{
 		if (!line.contains("step "))

@@ -3,6 +3,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.Vector;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 
 import javax.sound.midi.*;
 import javax.media.opengl.*;
@@ -43,6 +44,8 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 		
 		try
 		{
+			System.out.println("Starting to read MIDI file...");
+			
 			songSequence = MidiSystem.getSequence(midiFile);
 			
 			songDuration = 0.001f * songSequence.getMicrosecondLength();
@@ -74,7 +77,7 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 						songTitle = new String(meta.getData());
 						System.out.printf("MIDI file title: '%s'\n", songTitle);
 					}
-					else if (meta.getData()[0] == 127 && meta.getLength() >= 3)
+					else if (meta.getData().length >= 3 && meta.getData()[0] == 127)
 					{
 						byte[] data = meta.getData();
 						if (data[1] == 0 && data[2] == 0 && data[3] == 'A')
@@ -138,6 +141,10 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 			JOptionPane.showMessageDialog(null, "Error reading from file!", "AniMidi v0.5beta - Daryl Van Humbeck", JOptionPane.ERROR_MESSAGE);
 			System.exit(1);
 		}
+		finally
+		{
+			System.out.println("Done reading MIDI file.");
+		}
 	}
 	
 	public MidiWindow()
@@ -159,6 +166,8 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 		Vector<InstrumentPart> parts = instrument.getAllByRoll("swings");
 		for (InstrumentPart part : parts)
 			part.setAnimation(ani.duplicate(), TEST_NOTE);
+		
+		System.out.println("Done loading instruments.");
 		
 		light = new Light();
 		light.setPosition(new Position(5, 5, 5));
@@ -269,13 +278,23 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 		// Because we're using the heavy-weight GLCanvas, all popups need to be in front of the canvas
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		
-//		JFileChooser fileChooser = new JFileChooser();
-//		if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
-//			return;
-//		File midiFile = fileChooser.getSelectedFile();
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileFilter(new FileFilter() {
+			public boolean accept(File f)
+			{
+				return f.isDirectory() || f.getName().endsWith(".mid");
+			}
+			public String getDescription()
+			{
+				return "MIDI files (*.mid)";
+			}
+			});
+		if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
+			return;
+		File midiFile = fileChooser.getSelectedFile();
 		
-//		MidiWindow window = new MidiWindow(midiFile);
-		MidiWindow window = new MidiWindow();
+		MidiWindow window = new MidiWindow(midiFile);
+//		MidiWindow window = new MidiWindow();
 		window.show();
 	}
 }
