@@ -19,6 +19,19 @@ public class IpoAnimation implements Animation
 		steps = new Vector<AnimationStep>();
 	}
 	
+	private IpoAnimation(IpoAnimation a)
+	{
+		rotation = a.rotation;
+		offset = a.offset;
+		duration = a.duration;
+		strikeTime = a.strikeTime;
+		startTime = a.startTime;
+		
+		steps = new Vector<AnimationStep>();
+		for (AnimationStep as : a.steps)
+			steps.add(new AnimationStep(as));
+	}
+	
 	public boolean animate(float dTime, float curTime)
 	{
 		return false;
@@ -47,14 +60,14 @@ public class IpoAnimation implements Animation
 	public Animation duplicate()
 	{
 		// TODO implement this!
-		return null;
+		return new IpoAnimation(this);
 	}
 	
 	public static IpoAnimation loadAnimation(BufferedReader in, String firstLine) throws IOException
 	{
 		IpoAnimation result = new IpoAnimation();
 		
-		Scanner scan = new Scanner(firstLine);
+		Scanner scan = new Scanner(firstLine.substring(firstLine.indexOf(" ")+1));
 		result.duration = scan.nextFloat();
 		result.strikeTime = scan.nextFloat();
 		

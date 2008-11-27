@@ -32,6 +32,14 @@ public class AnimationStep
 		rot = r;
 	}
 	
+	public AnimationStep(AnimationStep a)
+	{
+		timeValue = a.timeValue;
+		stepType = a.stepType;
+		pos = a.pos;
+		rot = a.rot;
+	}
+	
 	public static AnimationStep parseAnimationStep(String line)
 	{
 		if (!line.contains("step "))

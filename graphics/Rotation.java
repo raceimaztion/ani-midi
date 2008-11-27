@@ -5,7 +5,7 @@ import javax.media.opengl.GL;
 
 public abstract class Rotation
 {
-	public static final String REGEX_FLOAT = "-?[0-9]+(\\.[0-9]+)?";
+	public static final String REGEX_FLOAT = "-?[0-9]+(.[0-9]+)?";
 	
 	public abstract void apply(GL gl);
 	public abstract void apply(GL gl, float amount);
@@ -13,6 +13,9 @@ public abstract class Rotation
 	public static Rotation parseRotation(String s)
 	{
 		Rotation result = null;
+		
+		if (s.startsWith("rot "))
+			s = s.substring("rot ".length()).trim();
 		
 		if (s.matches(REGEX_FLOAT + " [xyzXYZ]"))
 		{
@@ -39,7 +42,7 @@ public abstract class Rotation
 		if (result != null)
 			return result;
 		
-		System.err.printf("instrument.VirtualInstrument.loadVirtualInstrument(String): Unknown resultation type! s was:\n%s\n", s);
+		System.err.printf("graphics.Rotation.parseRotation(String): Unknown rotation type! Line was:\n%s\n", s);
 		return null;
 	}
 }
