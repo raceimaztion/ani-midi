@@ -27,6 +27,13 @@ public class Position
 		this.z = z;
 	}
 	
+	public Position(Position p)
+	{
+		x = p.x;
+		y = p.y;
+		z = p.z;
+	}
+	
 	/**
 	 * Applies this set of coordinates as a scaling operation
 	 * @param gl	The GL drawable to use
@@ -43,6 +50,16 @@ public class Position
 	public void applyTranslation(GL gl)
 	{
 		gl.glTranslatef(x, y, z);
+	}
+	
+	/**
+	 * Applies this set of coordinates as a translation operation
+	 * @param gl		The GL context to use
+	 * @param amount	The amount to apply the translation
+	 */
+	public void applyTranslation(GL gl, float amount)
+	{
+		gl.glTranslatef(amount*x, amount*y, amount*z);
 	}
 	
 	/**

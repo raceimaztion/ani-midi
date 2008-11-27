@@ -9,13 +9,18 @@ public abstract class Animation
 	/**
 	 * The piece that this animation affects
 	 */
-	protected InstrumentPart pieceAffected;
+	protected InstrumentPart part;
 	// TODO: fill this in
 	
 	public Animation(InstrumentPart pieceAffected)
 	{
-		this.pieceAffected = pieceAffected;
+		this.part = pieceAffected;
 	}
 	
-	public abstract boolean animate(float dTime);
+	public InstrumentPart getAffectedPiece()
+	{
+		return part;
+	}
+	
+	public abstract boolean animate(float dTime, float curTime);
 }

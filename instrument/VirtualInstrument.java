@@ -144,14 +144,14 @@ public class VirtualInstrument
 				else if (line.startsWith("offset "))
 				{
 					Scanner scan = new Scanner(line.substring("offset ".length()));
-					stack.peek().offset = new Position(scan.nextFloat(), scan.nextFloat(), scan.nextFloat());
+					stack.peek().position = new Position(scan.nextFloat(), scan.nextFloat(), scan.nextFloat());
 				}
 				// Does this part have an offset from its parent already?
 				else if (line.startsWith("offset_fix "))
 				{
 					Scanner scan = new Scanner(line.substring("offset_fix ".length()));
-					stack.peek().offset = new Position(scan.nextFloat(), scan.nextFloat(), scan.nextFloat());
-					Position offset = stack.peek().offset;
+					stack.peek().position = new Position(scan.nextFloat(), scan.nextFloat(), scan.nextFloat());
+					Position offset = stack.peek().position;
 					for (Position p : stack.peek().shape.getVertices())
 					{
 						p.move(offset, -1);

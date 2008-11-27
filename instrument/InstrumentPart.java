@@ -26,7 +26,7 @@ public class InstrumentPart implements Constants
 	protected Vector<InstrumentPart> children;
 	// Part appearance:
 	protected Shape shape;
-	protected Position offset;
+	protected Position position, offset;
 	protected Rotation rotation;
 	
 	// Part attributes:
@@ -39,7 +39,7 @@ public class InstrumentPart implements Constants
 		children = new Vector<InstrumentPart>();
 		shape = s;
 		
-		offset = new Position();
+		position = new Position();
 	}
 	
 	public void assignTextures(MaterialLibrary library)
@@ -64,7 +64,10 @@ public class InstrumentPart implements Constants
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glPushMatrix();
 		
-		/*if (stretchAxis != 0)
+		if (rotation != null)
+			rotation.apply(gl);
+		
+		if (stretchAxis != 0)
 		{
 			gl.glPushMatrix();
 			float scale = 1.0f + (float)note / 64;
@@ -74,17 +77,17 @@ public class InstrumentPart implements Constants
 				gl.glScalef(1, scale, 1);
 			if ((stretchAxis & AXIS_Z) == AXIS_Z)
 				gl.glScalef(1, 1, scale);
-		}*/
+		}
 		
+		if (position != null)
+			position.applyTranslation(gl);
 		if (offset != null)
 			offset.applyTranslation(gl);
-		if (rotation != null)
-			rotation.apply(gl);
 		
 		shape.drawNoTransformation(gl);
 		
-//		if (stretchAxis != 0)
-//			gl.glPopMatrix();
+		if (stretchAxis != 0)
+			gl.glPopMatrix();
 		
 		for (InstrumentPart part : children)
 			part.draw(gl, note);
@@ -96,7 +99,7 @@ public class InstrumentPart implements Constants
 	{
 		boolean needUpdate = false;
 		
-		if (animation != null && animation.animate(dTime))
+		if (animation != null && animation.animate(dTime, currentTime))
 			needUpdate = true;
 		
 		for (InstrumentPart p : children)
@@ -119,5 +122,35 @@ public class InstrumentPart implements Constants
 	public void setAnimation(Animation animation)
 	{
 		this.animation = animation;
+	}
+
+	public Position getPosition()
+	{
+		return position;
+	}
+
+	public void setPosition(Position position)
+	{
+		this.position = position;
+	}
+
+	public Rotation getRotation()
+	{
+		return rotation;
+	}
+
+	public void setRotation(Rotation rotation)
+	{
+		this.rotation = rotation;
+	}
+
+	public String getRoll()
+	{
+		return roll;
+	}
+
+	public Shape getShape()
+	{
+		return shape;
 	}
 }
