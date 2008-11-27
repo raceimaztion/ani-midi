@@ -15,16 +15,11 @@ public class VirtualInstrument implements Constants
 	protected Vector<Integer> supportedPatches;
 	protected Vector<InstrumentPart> parts;
 	protected Shape thisPart;
-	protected InstrumentPart parent;
+	
+	protected Vector<MidiNoteEvent> allNotes;
 	
 	protected VirtualInstrument()
 	{
-		this(null);
-	}
-	
-	protected VirtualInstrument(InstrumentPart parent)
-	{
-		this.parent = parent;
 		setup();
 	}
 	
@@ -32,6 +27,12 @@ public class VirtualInstrument implements Constants
 	{
 		supportedPatches = new Vector<Integer>();
 		parts = new Vector<InstrumentPart>();
+		allNotes = new Vector<MidiNoteEvent>();
+	}
+	
+	public void addNote(MidiNoteEvent event)
+	{
+		allNotes.add(event);
 	}
 	
 	public void assignTextures(MaterialLibrary library)

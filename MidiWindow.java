@@ -31,15 +31,23 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 	protected Light light;
 	protected MaterialLibrary materialLibrary;
 	
+	// File-specific
+	protected Sequence songSequence;
+	protected String songTitle;
+	protected float songDuration;
+	protected boolean maskTop = false;
+	
 	public MidiWindow(File midiFile)
 	{
 		this();
 		
-		// TODO: Load midi data from the file
 		try
 		{
-			Sequence midiSequence = MidiSystem.getSequence(midiFile);
-			Track[] midiTracks = midiSequence.getTracks();
+			songSequence = MidiSystem.getSequence(midiFile);
+			
+			songDuration = 0.001f * songSequence.getMicrosecondLength();
+			
+			Track[] midiTracks = songSequence.getTracks();
 			
 			// Handle track 0
 			MidiMessage msg;
@@ -62,15 +70,57 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 					else if (meta.getType() == MIDI_TYPE_MARKER)
 						System.out.printf("MIDI marker: '%s'\n", new String(meta.getData()));
 					else if (meta.getType() == MIDI_TYPE_TITLE)
-						System.out.printf("MIDI file title: '%s'\n", new String(meta.getData()));
+					{
+						songTitle = new String(meta.getData());
+						System.out.printf("MIDI file title: '%s'\n", songTitle);
+					}
+					else if (meta.getData()[0] == 127 && meta.getLength() >= 3)
+					{
+						byte[] data = meta.getData();
+						if (data[1] == 0 && data[2] == 0 && data[3] == 'A')
+							maskTop = true;
+					}
 				}
-			}
+			} // end for all events in the first track
 			
+			Track curTrack;
+			int curPatch = -1;
 			for (int track=1; track < midiTracks.length; track ++)
 			{
+				// If this is a Microsoft MPC MIDI file, we skip the top half
+				if (maskTop && track > 9)
+					break;
+				
+				curTrack = midiTracks[track];
 				if (track != 9)
 				{
-					
+					for (int num=0; num < curTrack.size(); num++)
+					{
+						msg = curTrack.get(num).getMessage();
+						if (msg instanceof ShortMessage)
+						{
+							ShortMessage sm = (ShortMessage)msg;
+							if (sm.getCommand() == ShortMessage.NOTE_ON)
+							{
+								if (curPatch < 0)
+									continue;
+								
+							}
+							else if (sm.getCommand() == ShortMessage.NOTE_OFF)
+							{
+								if (curPatch < 0)
+									continue;
+								
+							}
+							else if (sm.getCommand() == ShortMessage.PROGRAM_CHANGE)
+							{
+								curPatch = sm.getData1();
+								Vector<InstrumentReference.Reference> references = InstrumentReference.getInstrumentsSupporting(curPatch);
+								if (references.size() < 1)
+									curPatch = -1;
+							}
+						}
+					} // end for each message
 				}
 				else // Drum track
 				{

@@ -82,23 +82,25 @@ public class MidiTest
 		{
 			Sequence sequence = MidiSystem.getSequence(new File(FILE_NAME));
 			
-			BufferedImage image = MidiUtils.createImageFromMidiFile(sequence);
+			displayMidiData(sequence, FILE_NAME);
 			
-			JFrame frame = new JFrame("Midi Data");
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setBackground(Color.white);
-			
-			JScrollPane scroller = new JScrollPane(new JLabel(new ImageIcon(image)));
-			Dimension d = new Dimension(640, 480);
-			scroller.setPreferredSize(d);
-			scroller.setMinimumSize(d);
-			scroller.getHorizontalScrollBar().setUnitIncrement(8);
-			scroller.getVerticalScrollBar().setUnitIncrement(8);
-			frame.getContentPane().add(scroller, BorderLayout.CENTER);
-			
-			frame.pack();
-			frame.setLocationRelativeTo(null);
-			frame.setVisible(true);
+//			BufferedImage image = MidiUtils.createImageFromMidiFile(sequence);
+//			
+//			JFrame frame = new JFrame("Midi Data");
+//			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//			frame.setBackground(Color.white);
+//			
+//			JScrollPane scroller = new JScrollPane(new JLabel(new ImageIcon(image)));
+//			Dimension d = new Dimension(640, 480);
+//			scroller.setPreferredSize(d);
+//			scroller.setMinimumSize(d);
+//			scroller.getHorizontalScrollBar().setUnitIncrement(8);
+//			scroller.getVerticalScrollBar().setUnitIncrement(8);
+//			frame.getContentPane().add(scroller, BorderLayout.CENTER);
+//			
+//			frame.pack();
+//			frame.setLocationRelativeTo(null);
+//			frame.setVisible(true);
 		}
 		catch (IOException er)
 		{
