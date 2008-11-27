@@ -4,6 +4,8 @@ import graphics.*;
 
 public class PendulumAnimation extends OscilationAnimation implements Constants
 {
+	public static float max_value = 0;
+	
 	protected SingleRotation rotation;
 	
 	/**
@@ -28,7 +30,7 @@ public class PendulumAnimation extends OscilationAnimation implements Constants
 				rotation = new SingleRotation(0, 1, 0, 0);
 		}
 		
-		setSpeed(2);
+		setSpeed(1);
 	}
 	
 	public PendulumAnimation(PendulumAnimation a)
@@ -42,6 +44,11 @@ public class PendulumAnimation extends OscilationAnimation implements Constants
 		boolean result = animateStep(dTime);
 		
 		rotation.setRotationAmount(amount);
+		if (Math.abs(dTime) > max_value)
+		{
+			max_value = Math.abs(dTime);
+			System.out.printf("New max for rotation value: %.2f\n", amount);
+		}
 		
 		return result;
 	}

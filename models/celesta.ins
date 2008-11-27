@@ -1,0 +1,24 @@
+instrument "Celesta"
+patches all
+width 1.5
+ shape celesta-hook.obj
+ roll swings y
+  shape celesta-bar.obj
+  roll holder
+#  stretch z
+  pop
+ pop
+ shape celesta-hammer.obj
+ roll hammer
+ offset_fix 0 -0.5 0.5
+ animation 0.65 0.6
+  step 0.0 rot 0 x
+  step 0.5 rot 40 x
+  step 0.6 rot -10 x
+  step 0.65 rot 0 x
+ end_animation
+  shape celesta-mallet.obj
+  roll holder
+  offset 0 -0.5 -1
+  pop
+ pop

@@ -14,7 +14,7 @@ public class AnimationStep
 	protected float timeValue;
 	protected int stepType;
 	protected Position pos;
-	protected Rotation rot;
+	protected SingleRotation rot;
 	
 	public AnimationStep(float time, Position p)
 	{
@@ -24,7 +24,7 @@ public class AnimationStep
 		rot = null;
 	}
 	
-	public AnimationStep(float time, Rotation r)
+	public AnimationStep(float time, SingleRotation r)
 	{
 		timeValue = time;
 		stepType = STEP_ROTATION;
@@ -65,7 +65,7 @@ public class AnimationStep
 		{
 			Rotation rot = Rotation.parseRotation(line);
 			if (rot instanceof SingleRotation)
-				return new AnimationStep(time, rot);
+				return new AnimationStep(time, (SingleRotation)rot);
 			else
 			{
 				System.err.printf("AnimationSteps must have a rotation type of (angle) [xyz]\n");

@@ -65,6 +65,18 @@ public class InstrumentPart implements Constants
 		return children;
 	}
 	
+	public Animation getAnimationForNote(int note)
+	{
+		try
+		{
+			return animations[note];
+		}
+		catch (Exception er)
+		{
+			return null;
+		}
+	}
+	
 	/**
 	 * Draw this part of the virtual instrument
 	 * @param gl	The graphics context to use

@@ -15,8 +15,10 @@ public class VirtualInstrument implements Constants
 	protected Vector<Integer> supportedPatches;
 	protected Vector<InstrumentPart> parts;
 	protected Shape thisPart;
+	protected float width;
 	
 	protected Vector<MidiNoteEvent> allNotes;
+	protected int lastNote = 0;
 	
 	protected VirtualInstrument()
 	{
@@ -28,6 +30,7 @@ public class VirtualInstrument implements Constants
 		supportedPatches = new Vector<Integer>();
 		parts = new Vector<InstrumentPart>();
 		allNotes = new Vector<MidiNoteEvent>();
+		width = 1.0f;
 	}
 	
 	public void addNote(MidiNoteEvent event)
@@ -54,7 +57,33 @@ public class VirtualInstrument implements Constants
 			if (p.animate(dTime, totalTime))
 				needUpdate = true;
 		
+		if (allNotes.size() < 1)
+			return false;
+		
+		if (lastNote >= allNotes.size())
+			return false;
+		
+		if (allNotes.get(lastNote).getTime() < totalTime)
+		{
+			int note = allNotes.get(lastNote).getNote();
+			
+			for (InstrumentPart p : parts)
+				triggerAnimations(p, note, allNotes.get(lastNote).getVelocity(), totalTime);
+			lastNote++;
+		}
+		
 		return needUpdate;
+	}
+	
+	private void triggerAnimations(InstrumentPart p, int note, float velocity, float curTime)
+	{
+		if (p.getRoll().contains("hammer"))
+		{
+			p.getAnimationForNote(note).start(velocity, curTime);
+		}
+		
+		for (InstrumentPart part : p.getChildren())
+			triggerAnimations(part, note, velocity, curTime);
 	}
 	
 	public void draw(GL gl)
@@ -64,7 +93,7 @@ public class VirtualInstrument implements Constants
 			gl.glPushMatrix();
 			
 			// Transform the current object into place
-			gl.glTranslatef(0, note-63, 0);
+			gl.glTranslatef(0, (note-63)*width, 0);
 			
 			for (InstrumentPart p : parts)
 				p.draw(gl, note);
@@ -144,6 +173,10 @@ public class VirtualInstrument implements Constants
 					else
 						for (String s : line.substring("patches ".length()).split(" "))
 							result.supportedPatches.add(Integer.parseInt(s));
+				}
+				else if (line.startsWith("width "))
+				{
+					result.width = Float.parseFloat(line.substring("width ".length()));
 				}
 				// This starts a new object and a new level in the heirarchy
 				else if (line.startsWith("shape "))

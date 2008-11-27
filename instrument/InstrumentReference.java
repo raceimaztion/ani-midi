@@ -14,9 +14,11 @@ public class InstrumentReference
 		
 		try
 		{
-			File dir = new File("models/instruments/");
-			for (File f : dir.listFiles())
+			File dir = new File("models/");
+			for (File f : dir.listFiles(InstrumentFilter.getSingleton()))
+			{
 				references.add(new Reference(f));
+			}
 		}
 		catch (IOException er)
 		{
@@ -45,6 +47,7 @@ public class InstrumentReference
 		
 		public Reference(File file) throws IOException
 		{
+			supportedPatches = new Vector<Integer>();
 			source = file;
 			BufferedReader in = new BufferedReader(new FileReader(file));
 			String line = in.readLine();
@@ -63,6 +66,10 @@ public class InstrumentReference
 						for (String s : line.substring(line.indexOf(" ") + 1).split(" "))
 							supportedPatches.add(Integer.parseInt(s));
 					}
+				}
+				else if (line.startsWith("instrument "))
+				{
+					System.out.printf("Found instrument called %s.\n", line.substring(line.indexOf(" ")).trim());
 				}
 				
 				line = in.readLine();
@@ -85,6 +92,25 @@ public class InstrumentReference
 				return true;
 			else
 				return supportedPatches.contains((Integer)patch);
+		}
+	}
+	
+	public static class InstrumentFilter implements FileFilter
+	{
+		private static InstrumentFilter singleton;
+		
+		private InstrumentFilter() { }
+		
+		public boolean accept(File pathname)
+		{
+			return pathname.getName().endsWith(".ins");
+		}
+		
+		public static InstrumentFilter getSingleton()
+		{
+			if (singleton == null)
+				singleton = new InstrumentFilter();
+			return singleton;
 		}
 	}
 }

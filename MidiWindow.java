@@ -14,7 +14,7 @@ import instrument.*;
 
 public class MidiWindow implements GLEventListener, ActionListener, Constants
 {
-	public static final int TIMER_TICK = 20;
+	public static final int TIMER_TICK = 100;
 	
 	protected JFrame mainWindow;
 	protected GLCanvas drawingCanvas;
@@ -30,6 +30,7 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 	protected VirtualInstrument instrument;
 	protected Light light;
 	protected MaterialLibrary materialLibrary;
+	protected Vector<VirtualInstrument> allInstruments;
 	
 	// File-specific
 	protected Sequence songSequence;
@@ -37,9 +38,16 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 	protected float songDuration;
 	protected boolean maskTop = false;
 	
+	private boolean drawing = false, animating = false;
+	
 	public MidiWindow(File midiFile)
 	{
 		this();
+		timer.stop();
+		
+		allInstruments = new Vector<VirtualInstrument>();
+		if (instrument != null)
+			allInstruments.add(instrument);
 		
 		try
 		{
@@ -85,6 +93,10 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 				}
 			} // end for all events in the first track
 			
+			float secondsPerTick;
+			secondsPerTick = 1.0f / songSequence.getResolution();
+				
+			
 			Track curTrack;
 			int curPatch = -1;
 			for (int track=1; track < midiTracks.length; track ++)
@@ -107,12 +119,14 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 								if (curPatch < 0)
 									continue;
 								
+								instrument.addNote(new MidiNoteEvent(secondsPerTick*curTrack.get(num).getTick(), sm.getData1(), true, sm.getData2()));
 							}
 							else if (sm.getCommand() == ShortMessage.NOTE_OFF)
 							{
 								if (curPatch < 0)
 									continue;
 								
+								instrument.addNote(new MidiNoteEvent(secondsPerTick*curTrack.get(num).getTick(), sm.getData1(), false, sm.getData2()));
 							}
 							else if (sm.getCommand() == ShortMessage.PROGRAM_CHANGE)
 							{
@@ -122,7 +136,8 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 									curPatch = -1;
 								else
 								{
-									
+									instrument = references.get(0).getInstrument();
+									allInstruments.add(instrument);
 								}
 							}
 						}
@@ -147,6 +162,26 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 		finally
 		{
 			System.out.println("Done reading MIDI file.");
+			
+			for (VirtualInstrument vi : allInstruments)
+				vi.assignTextures(materialLibrary);
+			
+			OscilationAnimation ani = new PendulumAnimation(AXIS_Y);
+			ani.strike(1);
+			Vector<InstrumentPart> list = instrument.getAllByRoll("swings");
+			if (list != null)
+				for (InstrumentPart p : list)
+				{
+					p.setAnimation(ani);
+					
+					for (int note=0; note < 128; note++)
+					{
+						((OscilationAnimation)p.getAnimationForNote(note)).animate(0.1f*note, 0.1f*note);
+					}
+				}
+			
+			lastTickTime = System.currentTimeMillis();
+			timer.start();
 		}
 	}
 	
@@ -158,8 +193,8 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 		System.out.println("Done loading materials.");
 		
 		System.out.println("Loading instruments...");
-		instrument = VirtualInstrument.loadVirtualInstrument("models/tubular-bells.ins");
-		instrument.assignTextures(materialLibrary);
+//		instrument = VirtualInstrument.loadVirtualInstrument("models/celesta.ins");
+//		instrument.assignTextures(materialLibrary);
 		
 //		OscilationAnimation ani;
 //		ani = new VibrationAnimation(new Position(0, 0, 0.02f));
@@ -169,6 +204,7 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 //		Vector<InstrumentPart> parts = instrument.getAllByRoll("swings");
 //		for (InstrumentPart part : parts)
 //			part.setAnimation(ani.duplicate(), TEST_NOTE);
+//			((OscilationAnimation)part.getAnimationForNote(TEST_NOTE)).strike(10);
 		
 		System.out.println("Done loading instruments.");
 		
@@ -209,12 +245,19 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 		
 		if (source.equals(timer))
 		{
+			if (drawing) return;
+			animating = true;
+			
 			// This is a timer tick event
 			long thisTick = System.currentTimeMillis();
 			float dTime = 0.001f*(thisTick - lastTickTime);
 			boolean needUpdate = false;
 			
-			needUpdate = instrument.animate(dTime, totalTime);
+			for (VirtualInstrument ins : allInstruments)
+				if (ins.animate(dTime, totalTime))
+					needUpdate = true;
+//			needUpdate = instrument.animate(dTime, totalTime);
+			animating = false;
 			
 			if (needUpdate)
 			{
@@ -239,14 +282,26 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 	
 	public void display(GLAutoDrawable drawable)
 	{
+		if (animating) return;
+		drawing = true;
+		
 		GL gl = drawable.getGL();
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT);
 		
-		instrument.draw(gl);
+		gl.glPushMatrix();
+//		for (VirtualInstrument ins : allInstruments)
+//		{
+//			ins.draw(gl);
+//			gl.glTranslatef(-2, 0, 0);
+//		}
+		allInstruments.get(allInstruments.size()-1).draw(gl);
+		gl.glPopMatrix();
 		
 		gl.glFlush();
 		if (!drawable.getAutoSwapBufferMode())
 			drawable.swapBuffers();
+		
+		drawing = false;
 	}
 	
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged)
@@ -293,12 +348,12 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 				return "MIDI files (*.mid)";
 			}
 			});
-//		if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
-//			return;
-//		File midiFile = fileChooser.getSelectedFile();
-//		
-//		MidiWindow window = new MidiWindow(midiFile);
-		MidiWindow window = new MidiWindow();
+		if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
+			return;
+		File midiFile = fileChooser.getSelectedFile();
+		
+		MidiWindow window = new MidiWindow(midiFile);
+//		MidiWindow window = new MidiWindow();
 		window.show();
 	}
 }
