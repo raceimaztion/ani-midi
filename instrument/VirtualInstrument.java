@@ -11,8 +11,6 @@ import graphics.*;
 
 public class VirtualInstrument implements Constants
 {
-	public static final String REGEX_FLOAT = "-?[0-9]+(\\.[0-9]+)?";
-	
 	protected String name;
 	protected Vector<Integer> supportedPatches;
 	protected Vector<InstrumentPart> parts;
@@ -215,6 +213,11 @@ public class VirtualInstrument implements Constants
 						stack.peek().rotation = rot;
 				}
 				// TODO: add support for animations
+				else if (line.startsWith("animation "))
+				{
+					IpoAnimation animation = IpoAnimation.loadAnimation(in, line);
+					stack.peek().setAnimation(animation);
+				}
 				
 				line = in.readLine();
 			} // end while we have more lines

@@ -10,5 +10,8 @@ public interface Animation
 	public abstract Rotation getRotation();
 	public abstract Position getOffset();
 	
+	public abstract void start(float velocity, float startTime);
+	public abstract void stop(float velocity, float endTime);
+	
 	public abstract Animation duplicate();
 }

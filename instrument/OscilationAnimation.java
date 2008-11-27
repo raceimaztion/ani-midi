@@ -42,6 +42,16 @@ public abstract class OscilationAnimation implements Animation
 	{
 		this.speed = speed;
 	}
+	
+	public void start(float velocity, float startTime)
+	{
+		strike(10*velocity);
+	}
+	
+	public void stop(float velocity, float endTime)
+	{
+		// We don't need to do anything for this one
+	}
 
 	public float getAmount()
 	{

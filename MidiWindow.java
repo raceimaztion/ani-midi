@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.Vector;
 import javax.swing.*;
 
+import javax.sound.midi.*;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
@@ -35,13 +36,68 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 		this();
 		
 		// TODO: Load midi data from the file
+		try
+		{
+			Sequence midiSequence = MidiSystem.getSequence(midiFile);
+			Track[] midiTracks = midiSequence.getTracks();
+			
+			// Handle track 0
+			MidiMessage msg;
+			for (int num=0; num < midiTracks[0].size(); num ++)
+			{
+				msg = midiTracks[0].get(num).getMessage();
+				if (msg instanceof MetaMessage)
+				{
+					MetaMessage meta = (MetaMessage)msg;
+					if (meta.getType() == MIDI_TYPE_COMMENT)
+						System.out.printf("MIDI file comment: '%s'\n", new String(meta.getData()));
+					else if (meta.getType() == MIDI_TYPE_COPYRIGHT)
+						System.out.printf("MIDI file copyright: '%s'\n", new String(meta.getData()));
+					else if (meta.getType() == MIDI_TYPE_CUE)
+						System.out.printf("MIDI file cue '%s'.\n", new String(meta.getData()));
+					else if (meta.getType() == MIDI_TYPE_INSTRUMENT)
+						System.out.printf("MIDI instrument %s.\n", new String(meta.getData()));
+					else if (meta.getType() == MIDI_TYPE_LYRIC)
+						System.out.printf("MIDI lyric: %s\n", new String(meta.getData()));
+					else if (meta.getType() == MIDI_TYPE_MARKER)
+						System.out.printf("MIDI marker: '%s'\n", new String(meta.getData()));
+					else if (meta.getType() == MIDI_TYPE_TITLE)
+						System.out.printf("MIDI file title: '%s'\n", new String(meta.getData()));
+				}
+			}
+			
+			for (int track=1; track < midiTracks.length; track ++)
+			{
+				if (track != 9)
+				{
+					
+				}
+				else // Drum track
+				{
+					
+				}
+			}
+		}
+		catch (InvalidMidiDataException er)
+		{
+			JOptionPane.showMessageDialog(null, "File does not contain proper MIDI data!", "AniMidi v0.5beta - Daryl Van Humbeck", JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
+		}
+		catch (IOException er)
+		{
+			JOptionPane.showMessageDialog(null, "Error reading from file!", "AniMidi v0.5beta - Daryl Van Humbeck", JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
+		}
 	}
 	
 	public MidiWindow()
 	{
+		System.out.println("Loading all materials...");
 		materialLibrary = new MaterialLibrary("models/instruments");
 		materialLibrary.loadAllMaterials();
+		System.out.println("Done loading materials.");
 		
+		System.out.println("Loading instruments...");
 		instrument = VirtualInstrument.loadVirtualInstrument("models/tubular-bells.ins");
 		instrument.assignTextures(materialLibrary);
 		

@@ -34,7 +34,10 @@ public class AnimationStep
 	
 	public static AnimationStep parseAnimationStep(String line)
 	{
-		line = line.substring("step ".length());
+		if (!line.contains("step "))
+			return null;
+		
+		line = line.substring(line.indexOf("step ") + "step ".length());
 		
 		float time = Float.parseFloat(line.substring(0, line.indexOf(' ')));
 		
