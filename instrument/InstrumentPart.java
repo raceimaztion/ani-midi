@@ -83,7 +83,7 @@ public class InstrumentPart implements Constants
 		if (stretchAxis != 0)
 		{
 			gl.glPushMatrix();
-			float scale = 1.0f + (float)note / 64;
+			float scale = (1.0f + (float)note / 64) * 2.0f;
 			if ((stretchAxis & AXIS_X) == AXIS_X)
 				gl.glScalef(scale, 1, 1);
 			if ((stretchAxis & AXIS_Y) == AXIS_Y)

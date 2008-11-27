@@ -59,15 +59,12 @@ public class VirtualInstrument implements Constants
 	
 	public void draw(GL gl)
 	{
-//		for (InstrumentPart p : parts)
-//			p.draw(gl, TEST_NOTE);
-		
 		for (int note=0; note < 128; note ++)
 		{
 			gl.glPushMatrix();
 			
 			// Transform the current object into place
-			gl.glTranslatef(note, 0, 0);
+			gl.glTranslatef(0, note-63, 0);
 			
 			for (InstrumentPart p : parts)
 				p.draw(gl, note);
@@ -116,6 +113,9 @@ public class VirtualInstrument implements Constants
 		{
 			BufferedReader in = new BufferedReader(new FileReader(file));
 			VirtualInstrument result = new VirtualInstrument();
+			
+			Vector<InstrumentPart> swings = new Vector<InstrumentPart>(),
+									animated = new Vector<InstrumentPart>();
 			
 			Stack<InstrumentPart> stack = new Stack<InstrumentPart>();
 			String line = in.readLine();
@@ -175,7 +175,24 @@ public class VirtualInstrument implements Constants
 				// Set the roll that the current part has
 				else if (line.startsWith("roll "))
 				{
-					stack.peek().roll = line.substring("roll ".length());
+					String roll = line.substring("roll ".length());
+					stack.peek().roll = roll;
+					
+					if (roll.contains("swings"))
+					{
+						if (roll.contains("x") || roll.contains("X"))
+							stack.peek().setAnimation(new PendulumAnimation(AXIS_X));
+						else if (roll.contains("y") || roll.contains("Y"))
+							stack.peek().setAnimation(new PendulumAnimation(AXIS_Y));
+						else if (roll.contains("z") || roll.contains("Z"))
+							stack.peek().setAnimation(new PendulumAnimation(AXIS_Z));
+					}
+					else if (roll.contains("vibrates"))
+					{
+						stack.peek().setAnimation(new VibrationAnimation(Position.parsePosition(roll.substring(roll.indexOf(" ")))));
+					}
+					if (roll.contains("swings") || roll.contains("vibrates"))
+						swings.add(stack.peek());
 				}
 				// If this part stretches at all, which axis?
 				else if (line.startsWith("stretch "))
@@ -218,10 +235,20 @@ public class VirtualInstrument implements Constants
 				{
 					IpoAnimation animation = IpoAnimation.loadAnimation(in, line);
 					stack.peek().setAnimation(animation);
+					
+					animated.add(stack.peek());
 				}
 				
 				line = in.readLine();
 			} // end while we have more lines
+			
+			// Tie up some loose ends
+			for (InstrumentPart a : animated)
+				for (InstrumentPart s : swings)
+					for (int note=0; note < 128; note++)
+					{
+						((IpoAnimation)a.animations[note]).addAffectedAnimation((OscilationAnimation)s.animations[note]);
+					}
 			
 			return result;
 		}

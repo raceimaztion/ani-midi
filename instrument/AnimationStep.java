@@ -63,7 +63,14 @@ public class AnimationStep
 		
 		if (line.startsWith("rot "))
 		{
-			return new AnimationStep(time, Rotation.parseRotation(line));
+			Rotation rot = Rotation.parseRotation(line);
+			if (rot instanceof SingleRotation)
+				return new AnimationStep(time, rot);
+			else
+			{
+				System.err.printf("AnimationSteps must have a rotation type of (angle) [xyz]\n");
+				return null;
+			}
 		}
 		else if (line.startsWith("move "))
 		{

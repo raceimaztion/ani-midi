@@ -12,7 +12,7 @@ public interface Constants
 	
 	public static final GLUT GL_UT = new GLUT();
 	
-	public static final int TEST_NOTE = 45;
+	public static final int TEST_NOTE = 63;
 	
 	public static final int MIDI_TYPE_COMMENT = 1;
 	public static final int MIDI_TYPE_COPYRIGHT = 2;

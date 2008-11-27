@@ -161,14 +161,14 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 		instrument = VirtualInstrument.loadVirtualInstrument("models/tubular-bells.ins");
 		instrument.assignTextures(materialLibrary);
 		
-		OscilationAnimation ani;
+//		OscilationAnimation ani;
 //		ani = new VibrationAnimation(new Position(0, 0, 0.02f));
-		ani = new PendulumAnimation(AXIS_Y);
-		ani.strike(10);
+//		ani = new PendulumAnimation(AXIS_Y);
+//		ani.strike(10);
 		
-		Vector<InstrumentPart> parts = instrument.getAllByRoll("swings");
-		for (InstrumentPart part : parts)
-			part.setAnimation(ani.duplicate(), TEST_NOTE);
+//		Vector<InstrumentPart> parts = instrument.getAllByRoll("swings");
+//		for (InstrumentPart part : parts)
+//			part.setAnimation(ani.duplicate(), TEST_NOTE);
 		
 		System.out.println("Done loading instruments.");
 		
@@ -188,7 +188,8 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 		
 		glu = new GLU();
 		camera = new Camera();
-		camera.move(0, 3, 0);
+		camera.move(-5, 0, 1);
+		camera.rotate(0, -90);
 		
 		mainWindow.getContentPane().add(drawingCanvas, BorderLayout.CENTER);
 		mainWindow.pack();
@@ -258,7 +259,7 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 		drawable.setGL(new DebugGL(drawable.getGL()));
 		
 		GL gl = drawable.getGL();
-		gl.glClearColor(0, 0, 0.3f, 1);
+		gl.glClearColor(0.1f, 0.4f, 0.3f, 1);
 		
 		gl.setSwapInterval(0);
 		gl.glEnable(GL.GL_DEPTH_TEST);
@@ -292,12 +293,12 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 				return "MIDI files (*.mid)";
 			}
 			});
-		if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
-			return;
-		File midiFile = fileChooser.getSelectedFile();
-		
-		MidiWindow window = new MidiWindow(midiFile);
-//		MidiWindow window = new MidiWindow();
+//		if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
+//			return;
+//		File midiFile = fileChooser.getSelectedFile();
+//		
+//		MidiWindow window = new MidiWindow(midiFile);
+		MidiWindow window = new MidiWindow();
 		window.show();
 	}
 }

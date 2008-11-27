@@ -1,8 +1,9 @@
 package graphics;
 
+import java.util.Scanner;
 import javax.media.opengl.*;
 
-public class Position
+public class Position implements Constants
 {
 	public float x, y, z;
 	
@@ -173,6 +174,12 @@ public class Position
 	
 	public static Position parsePosition(String s)
 	{
+		if (s.matches(REGEX_FLOAT + " " + REGEX_FLOAT + " " + REGEX_FLOAT))
+		{
+			Scanner scan = new Scanner(s);
+			return new Position(scan.nextFloat(), scan.nextFloat(), scan.nextFloat());
+		}
+		
 		return null;
 	}
 }

@@ -29,9 +29,9 @@ public class Camera
 		pos.move(p);
 	}
 	
-	public void rotate(float dx, float dy, float dz)
+	public void rotate(float dx, float dy)
 	{
-		rot.move(dx, dy, dz);
+		rot.move(dx, dy, 0);
 	}
 	
 	public void rotate(Position p)
@@ -55,15 +55,15 @@ public class Camera
 	{
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(90, (double)width/height, 0.001f, 50000);
+		glu.gluPerspective(70, (double)width/height, 0.001f, 50000);
 		
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		glu.gluLookAt(0, 0, 0,  // Eye location
 		              0, 1, 0,  // Look at
 		              0, 0, 1); // Up
+		gl.glRotatef(rot.y, 0, 0, 1);
+		gl.glRotatef(rot.x, 1, 0, 0);
 		pos.applyTranslation(gl);
-		//gl.glRotatef(rot.y, 1, 0, 0);
-		//gl.glRotatef(rot.x, 0, 0, 1);
 	}
 }
