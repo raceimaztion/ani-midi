@@ -12,9 +12,8 @@ public class PendulumAnimation extends OscilationAnimation implements Constants
 	 * @param part
 	 * @param axis
 	 */
-	public PendulumAnimation(InstrumentPart part, int axis)
+	public PendulumAnimation(int axis)
 	{
-		super(part);
 		affectedAxis = axis;
 		switch(axis)
 		{
@@ -30,19 +29,38 @@ public class PendulumAnimation extends OscilationAnimation implements Constants
 			default:
 				rotation = new SingleRotation(0, 1, 0, 0);
 		}
-		// After this, we can simply alter our local copy and things will animate just fine
-		part.rotationOffset = rotation;
 		
 		setSpeed(2);
+	}
+	
+	public PendulumAnimation(PendulumAnimation a)
+	{
+		super(a);
+		affectedAxis = a.affectedAxis;
+		rotation = new SingleRotation(a.rotation);
 	}
 	
 	public boolean animate(float dTime, float curTime)
 	{
 		boolean result = animateStep(dTime);
 		
-		rotation.setRotationAmount(offset);
+		rotation.setRotationAmount(amount);
 		
 		return result;
-		//return true;
+	}
+
+	public Rotation getRotation()
+	{
+		return rotation;
+	}
+	
+	public Position getOffset()
+	{
+		return null;
+	}
+	
+	public Animation duplicate()
+	{
+		return new PendulumAnimation(this);
 	}
 }

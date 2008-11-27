@@ -1,26 +1,14 @@
 package instrument;
 
-public abstract class Animation
+import graphics.Rotation;
+import graphics.Position;
+
+public interface Animation
 {
-	/**
-	 * The total amount of time that this animation lasts for
-	 */
-	protected float totalTime;
-	/**
-	 * The piece that this animation affects
-	 */
-	protected InstrumentPart part;
-	// TODO: fill this in
-	
-	public Animation(InstrumentPart pieceAffected)
-	{
-		this.part = pieceAffected;
-	}
-	
-	public InstrumentPart getAffectedPiece()
-	{
-		return part;
-	}
-	
 	public abstract boolean animate(float dTime, float curTime);
+	
+	public abstract Rotation getRotation();
+	public abstract Position getOffset();
+	
+	public abstract Animation duplicate();
 }

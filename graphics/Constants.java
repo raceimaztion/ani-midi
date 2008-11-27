@@ -9,4 +9,6 @@ public interface Constants
 	public static final int AXIS_Z = 0x1004;
 	
 	public static final GLUT GL_UT = new GLUT();
+	
+	public static final int TEST_NOTE = 45;
 }

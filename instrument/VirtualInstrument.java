@@ -9,7 +9,7 @@ import javax.media.opengl.GL;
 
 import graphics.*;
 
-public class VirtualInstrument
+public class VirtualInstrument implements Constants
 {
 	public static final String REGEX_FLOAT = "-?[0-9]+(\\.[0-9]+)?";
 	
@@ -61,12 +61,51 @@ public class VirtualInstrument
 	public void draw(GL gl)
 	{
 		for (InstrumentPart p : parts)
-			p.draw(gl, 127);
+			p.draw(gl, TEST_NOTE);
+		/*
+		for (int note=0; note < 128; note ++)
+		{
+			gl.glPushMatrix();
+			
+			// Transform the current object into place
+			
+			for (InstrumentPart p : parts)
+				p.draw(gl, note);
+			
+			gl.glPopMatrix();
+		}
+		 */
 	}
 	
 	public boolean isPatchSupported(int patch)
 	{
 		return supportedPatches.contains((Integer)patch);
+	}
+	
+	public Vector<InstrumentPart> getAllByRoll(String roll)
+	{
+		Vector<InstrumentPart> result = new Vector<InstrumentPart>();
+		
+		for (InstrumentPart part : parts)
+		{
+			if (part.getRoll().startsWith(roll))
+				result.add(part);
+			
+			findAllByRoll(result, part, roll);
+		}
+		
+		return result;
+	}
+	
+	private void findAllByRoll(Vector<InstrumentPart> list, InstrumentPart part, String roll)
+	{
+		for (InstrumentPart p : part.getChildren())
+		{
+			if (p.getRoll().startsWith(roll))
+				list.add(p);
+			
+			findAllByRoll(list, p, roll);
+		}
 	}
 	
 	public static VirtualInstrument loadVirtualInstrument(String file)

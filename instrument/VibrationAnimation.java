@@ -6,20 +6,40 @@ public class VibrationAnimation extends OscilationAnimation
 {
 	private OffsetPosition axis;
 	
-	public VibrationAnimation(InstrumentPart part, Position affectedAxis)
+	public VibrationAnimation(Position affectedAxis)
 	{
-		super(part);
-		part.offset = axis = new OffsetPosition(affectedAxis);
+		axis = new OffsetPosition(affectedAxis);
 		
-		offset = velocity = 0;
+		amount = velocity = 0;
+	}
+	
+	public VibrationAnimation(VibrationAnimation a)
+	{
+		super(a);
+		axis = new OffsetPosition(a.axis);
 	}
 	
 	public boolean animate(float dTime, float curTime)
 	{
 		boolean result = animateStep(dTime);
 		
-		axis.setAmount(offset);
+		axis.setAmount(amount);
 		
 		return result;
+	}
+
+	public Position getOffset()
+	{
+		return axis;
+	}
+
+	public Rotation getRotation()
+	{
+		return null;
+	}
+	
+	public Animation duplicate()
+	{
+		return new VibrationAnimation(this);
 	}
 }

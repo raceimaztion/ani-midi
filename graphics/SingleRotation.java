@@ -22,6 +22,14 @@ public class SingleRotation extends Rotation
 		rz = z;
 	}
 	
+	public SingleRotation(SingleRotation r)
+	{
+		amount = r.amount;
+		rx = r.rx;
+		ry = r.ry;
+		rz = r.rz;
+	}
+	
 	public void apply(GL gl)
 	{
 		//gl.glRotatef((float)Math.toRadians(amount), rx, ry, rz);

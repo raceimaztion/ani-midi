@@ -1,12 +1,16 @@
 package instrument;
 
+import graphics.*;
+
 import java.io.*;
 
-public class IpoAnimation extends Animation
+public class IpoAnimation implements Animation
 {
-	private IpoAnimation(InstrumentPart part)
+	private Rotation rotation;
+	private Position offset;
+	
+	private IpoAnimation()
 	{
-		super(part);
 	}
 	
 	public boolean animate(float dTime, float curTime)
@@ -14,9 +18,9 @@ public class IpoAnimation extends Animation
 		return false;
 	}
 	
-	public static IpoAnimation loadAnimation(InstrumentPart part, BufferedReader in) throws IOException
+	public static IpoAnimation loadAnimation(BufferedReader in) throws IOException
 	{
-		IpoAnimation result = new IpoAnimation(part);
+		IpoAnimation result = new IpoAnimation();
 		
 		String line = in.readLine();
 		while (!line.contains("end_animation"))
@@ -27,5 +31,21 @@ public class IpoAnimation extends Animation
 		}
 		
 		return result;
+	}
+
+	public Position getOffset()
+	{
+		return offset;
+	}
+
+	public Rotation getRotation()
+	{
+		return rotation;
+	}
+	
+	public Animation duplicate()
+	{
+		// TODO implement this!
+		return null;
 	}
 }

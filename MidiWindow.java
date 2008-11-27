@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.Vector;
 import javax.swing.*;
 
 import javax.media.opengl.*;
@@ -10,7 +11,7 @@ import graphics.*;
 import instrument.*;
 
 
-public class MidiWindow implements GLEventListener, ActionListener
+public class MidiWindow implements GLEventListener, ActionListener, Constants
 {
 	public static final int TIMER_TICK = 20;
 	
@@ -32,7 +33,6 @@ public class MidiWindow implements GLEventListener, ActionListener
 	public MidiWindow(File midiFile)
 	{
 		this();
-		
 	}
 	
 	public MidiWindow()
@@ -43,14 +43,16 @@ public class MidiWindow implements GLEventListener, ActionListener
 		instrument = VirtualInstrument.loadVirtualInstrument("models/tubular-bells.ins");
 		instrument.assignTextures(materialLibrary);
 		
-		InstrumentPart part = instrument.getParts().get(0).getChildren().get(0);
-		OscilationAnimation ani = new VibrationAnimation(part, new Position(0, 0, 0.1f));
-		part.setAnimation(ani);
+		OscilationAnimation ani = new VibrationAnimation(new Position(0, 0, 0.02f));
 		ani.strike(10);
+		
+		Vector<InstrumentPart> parts = instrument.getAllByRoll("swings");
+		for (InstrumentPart part : parts)
+			part.setAnimation(ani.duplicate(), TEST_NOTE);
 		
 		light = new Light();
 		light.setPosition(new Position(5, 5, 5));
-		light.setAmbient(Color.gray);
+		light.setAmbient(Color.gray.brighter());
 		
 		mainWindow = new JFrame("MIDI Visualizer - by Daryl Van Humbeck");
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,6 +74,7 @@ public class MidiWindow implements GLEventListener, ActionListener
 		
 		totalTime = 0;
 		lastTickTime = System.currentTimeMillis();
+		
 		timer = new Timer(TIMER_TICK, this);
 		timer.setCoalesce(true);
 		timer.start();
@@ -91,7 +94,11 @@ public class MidiWindow implements GLEventListener, ActionListener
 			needUpdate = instrument.animate(dTime, totalTime);
 			
 			if (needUpdate)
+			{
+				
+			}
 				drawingCanvas.display();
+			
 			lastTickTime = thisTick;
 			totalTime += dTime;
 		}
@@ -152,12 +159,13 @@ public class MidiWindow implements GLEventListener, ActionListener
 		// Because we're using the heavy-weight GLCanvas, all popups need to be in front of the canvas
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		
-		JFileChooser fileChooser = new JFileChooser();
-		if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
-			return;
-		File midiFile = fileChooser.getSelectedFile();
+//		JFileChooser fileChooser = new JFileChooser();
+//		if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
+//			return;
+//		File midiFile = fileChooser.getSelectedFile();
 		
-		MidiWindow window = new MidiWindow(midiFile);
+//		MidiWindow window = new MidiWindow(midiFile);
+		MidiWindow window = new MidiWindow();
 		window.show();
 	}
 }

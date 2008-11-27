@@ -1,31 +1,36 @@
 package instrument;
 
-public abstract class OscilationAnimation extends Animation
+public abstract class OscilationAnimation implements Animation
 {
 	public static final float DECAY_RATE = 0.25f;
 	
-	protected float offset, velocity, speed;
+	protected float amount, velocity, speed;
 	
-	public OscilationAnimation(InstrumentPart part)
+	public OscilationAnimation()
 	{
-		super(part);
-		
-		offset = velocity = 0;
-		speed = 2;
+		amount = velocity = 0;
+		speed = 1;
+	}
+	
+	public OscilationAnimation(OscilationAnimation a)
+	{
+		amount = a.amount;
+		velocity = a.velocity;
+		speed = a.speed;
 	}
 	
 	protected boolean animateStep(float dTime)
 	{
-		velocity -= offset*speed*dTime;
-		offset += velocity*dTime;
+		velocity -= amount*speed*dTime;
+		amount += velocity*dTime;
 		velocity *= (1 - DECAY_RATE*dTime);
 		
-		return Math.abs(velocity) > 0.0001f || Math.abs(offset) > 0.0001f;
+		return Math.abs(velocity) > 0.0001f || Math.abs(amount) > 0.0001f;
 	}
 	
 	public void strike(float force)
 	{
-		offset += force;
+		amount += force;
 	}
 
 	public float getSpeed()
@@ -38,9 +43,9 @@ public abstract class OscilationAnimation extends Animation
 		this.speed = speed;
 	}
 
-	public float getOffset()
+	public float getAmount()
 	{
-		return offset;
+		return amount;
 	}
 
 	public float getVelocity()

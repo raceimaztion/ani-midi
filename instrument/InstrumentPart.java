@@ -27,19 +27,28 @@ public class InstrumentPart implements Constants
 	// Part appearance:
 	protected Shape shape;
 	protected Position position;
-	protected Position offset; // TODO need one of these for each note this part is used for
 	protected Rotation rotation;
-	protected Rotation rotationOffset; // TODO need one of these for each note this part is used for
 	
 	// Part attributes:
 	protected String roll;
 	protected int stretchAxis;
-	protected Animation animation;
+	
+	// Animation attributes
+	protected Animation[] animations;
+	protected Position[] offsets;
+	protected Rotation[] rotationOffsets;
+	
+	// Temporary things
+//	private int currentNote;
 	
 	public InstrumentPart(Shape s)
 	{
 		children = new Vector<InstrumentPart>();
 		shape = s;
+		
+		animations = new Animation[128];
+		offsets = new Position[128];
+		rotationOffsets = new Rotation[128];
 		
 		position = new Position();
 	}
@@ -68,8 +77,8 @@ public class InstrumentPart implements Constants
 		
 		if (rotation != null)
 			rotation.apply(gl);
-		if (rotationOffset != null)
-			rotationOffset.apply(gl);
+		if (animations[note] != null && animations[note].getRotation() != null)
+			animations[note].getRotation().apply(gl);
 		
 		if (stretchAxis != 0)
 		{
@@ -85,13 +94,18 @@ public class InstrumentPart implements Constants
 		
 		if (position != null)
 			position.applyTranslation(gl);
-		if (offset != null)
-			offset.applyTranslation(gl);
+		if (animations[note] != null && animations[note].getOffset() != null)
+			animations[note].getOffset().applyTranslation(gl);
 		
 		shape.drawNoTransformation(gl);
 		
 		if (stretchAxis != 0)
 			gl.glPopMatrix();
+		
+		if (position != null)
+			position.applyTranslation(gl);
+		if (offsets[note] != null)
+			offsets[note].applyTranslation(gl);
 		
 		for (InstrumentPart part : children)
 			part.draw(gl, note);
@@ -103,8 +117,11 @@ public class InstrumentPart implements Constants
 	{
 		boolean needUpdate = false;
 		
-		if (animation != null && animation.animate(dTime, currentTime))
-			needUpdate = true;
+		for (int note=0; note < 128; note ++)
+		{
+			if (animations[note] != null && animations[note].animate(dTime, currentTime))
+				needUpdate = true;
+		}
 		
 		for (InstrumentPart p : children)
 			if (p.animate(dTime, currentTime))
@@ -118,14 +135,21 @@ public class InstrumentPart implements Constants
 		children.add(child);
 	}
 
-	public Animation getAnimation()
-	{
-		return animation;
-	}
-
 	public void setAnimation(Animation animation)
 	{
-		this.animation = animation;
+		for (int i=0; i < animations.length; i++)
+		{
+			animations[i] = animation.duplicate();
+			offsets[i] = animations[i].getOffset();
+			rotationOffsets[i] = animations[i].getRotation();
+		}
+	}
+	
+	public void setAnimation(Animation animation, int note)
+	{
+		animations[note] = animation;
+		offsets[note] = animation.getOffset();
+		rotationOffsets[note] = animation.getRotation();
 	}
 
 	public Position getPosition()
