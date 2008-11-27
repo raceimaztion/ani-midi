@@ -94,7 +94,7 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 			} // end for all events in the first track
 			
 			float secondsPerTick;
-			secondsPerTick = 1.0f / songSequence.getResolution();
+			secondsPerTick = 10.0f / songSequence.getResolution();
 				
 			
 			Track curTrack;
@@ -167,7 +167,7 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 				vi.assignTextures(materialLibrary);
 			
 			OscilationAnimation ani = new PendulumAnimation(AXIS_Y);
-			ani.strike(1);
+			ani.strike(3);
 			Vector<InstrumentPart> list = instrument.getAllByRoll("swings");
 			if (list != null)
 				for (InstrumentPart p : list)
@@ -176,7 +176,8 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 					
 					for (int note=0; note < 128; note++)
 					{
-						((OscilationAnimation)p.getAnimationForNote(note)).animate(0.1f*note, 0.1f*note);
+						for (int n=0; n < 5; n++)
+							((OscilationAnimation)p.getAnimationForNote(note)).animate(0.02f*note, 0.02f*note);
 					}
 				}
 			
@@ -224,7 +225,7 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 		
 		glu = new GLU();
 		camera = new Camera();
-		camera.move(-5, 0, 1);
+		camera.move(-10, 0, 1);
 		camera.rotate(0, -90);
 		
 		mainWindow.getContentPane().add(drawingCanvas, BorderLayout.CENTER);
@@ -253,10 +254,10 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 			float dTime = 0.001f*(thisTick - lastTickTime);
 			boolean needUpdate = false;
 			
-			for (VirtualInstrument ins : allInstruments)
-				if (ins.animate(dTime, totalTime))
-					needUpdate = true;
-//			needUpdate = instrument.animate(dTime, totalTime);
+//			for (VirtualInstrument ins : allInstruments)
+//				if (ins.animate(dTime, totalTime))
+//					needUpdate = true;
+			needUpdate = instrument.animate(dTime, totalTime);
 			animating = false;
 			
 			if (needUpdate)

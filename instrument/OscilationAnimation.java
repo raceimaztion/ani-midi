@@ -45,7 +45,7 @@ public abstract class OscilationAnimation implements Animation
 	
 	public void start(float velocity, float startTime)
 	{
-//		strike(10*velocity);
+		strike(10*velocity);
 	}
 	
 	public void stop(float velocity, float endTime)
