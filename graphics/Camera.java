@@ -39,6 +39,11 @@ public class Camera
 		rot.move(p);
 	}
 	
+	public void lookAt(Position p)
+	{
+		
+	}
+	
 	/**
 	 * Apply the camera to the current scene
 	 * @param gl		The GL context to use for rendering

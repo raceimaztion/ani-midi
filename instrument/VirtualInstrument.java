@@ -59,21 +59,21 @@ public class VirtualInstrument implements Constants
 	
 	public void draw(GL gl)
 	{
-		for (InstrumentPart p : parts)
-			p.draw(gl, TEST_NOTE);
-		/*
+//		for (InstrumentPart p : parts)
+//			p.draw(gl, TEST_NOTE);
+		
 		for (int note=0; note < 128; note ++)
 		{
 			gl.glPushMatrix();
 			
 			// Transform the current object into place
+			gl.glTranslatef(note, 0, 0);
 			
 			for (InstrumentPart p : parts)
 				p.draw(gl, note);
 			
 			gl.glPopMatrix();
 		}
-		 */
 	}
 	
 	public boolean isPatchSupported(int patch)
@@ -213,7 +213,7 @@ public class VirtualInstrument implements Constants
 					if (rot != null)
 						stack.peek().rotation = rot;
 				}
-				// TODO: add support for animations
+				// Is this the start of an animation?
 				else if (line.startsWith("animation "))
 				{
 					IpoAnimation animation = IpoAnimation.loadAnimation(in, line);

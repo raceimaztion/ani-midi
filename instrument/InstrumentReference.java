@@ -74,6 +74,11 @@ public class InstrumentReference
 			return source;
 		}
 		
+		public VirtualInstrument getInstrument()
+		{
+			return VirtualInstrument.loadVirtualInstrument(source.getPath());
+		}
+		
 		public boolean isPatchSupported(int patch)
 		{
 			if (supportedPatches == null)

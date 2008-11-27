@@ -13,10 +13,12 @@ public class IpoAnimation implements Animation
 	private float duration, strikeTime, startTime;
 	
 	private Vector<AnimationStep> steps;
+	private Vector<OscilationAnimation> affectedAnimations;
 	
 	private IpoAnimation()
 	{
 		steps = new Vector<AnimationStep>();
+		affectedAnimations = new Vector<OscilationAnimation>();
 	}
 	
 	private IpoAnimation(IpoAnimation a)
@@ -27,14 +29,20 @@ public class IpoAnimation implements Animation
 		strikeTime = a.strikeTime;
 		startTime = a.startTime;
 		
+		affectedAnimations = new Vector<OscilationAnimation>();
 		steps = new Vector<AnimationStep>();
 		for (AnimationStep as : a.steps)
-			steps.add(new AnimationStep(as));
+			steps.add(as);
 	}
 	
 	public boolean animate(float dTime, float curTime)
 	{
 		return false;
+	}
+	
+	public void addAffectedAnimation(OscilationAnimation a)
+	{
+		affectedAnimations.add(a);
 	}
 
 	public Position getOffset()
@@ -49,7 +57,7 @@ public class IpoAnimation implements Animation
 	
 	public void start(float velocity, float startTime)
 	{
-		
+		this.startTime = startTime;
 	}
 	
 	public void stop(float velocity, float endTime)
@@ -59,7 +67,6 @@ public class IpoAnimation implements Animation
 	
 	public Animation duplicate()
 	{
-		// TODO implement this!
 		return new IpoAnimation(this);
 	}
 	

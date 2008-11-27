@@ -67,7 +67,7 @@ public class AnimationStep
 		}
 		else if (line.startsWith("move "))
 		{
-			Scanner scan = new Scanner(line.substring("move ".length()));
+			Scanner scan = new Scanner(line.substring("move ".length()).trim());
 			return new AnimationStep(time, new Position(scan.nextFloat(), scan.nextFloat(), scan.nextFloat()));
 		}
 		System.err.printf("instrument.AnimationStep.parseAnimationStep(String): Unknown step type:\n%s\n", line);

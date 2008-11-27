@@ -12,7 +12,6 @@ import javax.media.opengl.glu.*;
 import graphics.*;
 import instrument.*;
 
-
 public class MidiWindow implements GLEventListener, ActionListener, Constants
 {
 	public static final int TIMER_TICK = 20;
@@ -121,6 +120,10 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 								Vector<InstrumentReference.Reference> references = InstrumentReference.getInstrumentsSupporting(curPatch);
 								if (references.size() < 1)
 									curPatch = -1;
+								else
+								{
+									
+								}
 							}
 						}
 					} // end for each message
@@ -185,7 +188,7 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 		
 		glu = new GLU();
 		camera = new Camera();
-		camera.move(0, 2, 0);
+		camera.move(0, 3, 0);
 		
 		mainWindow.getContentPane().add(drawingCanvas, BorderLayout.CENTER);
 		mainWindow.pack();
