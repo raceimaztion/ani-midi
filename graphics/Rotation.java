@@ -8,6 +8,7 @@ public abstract class Rotation
 	public static final String REGEX_FLOAT = "-?[0-9]+(\\.[0-9]+)?";
 	
 	public abstract void apply(GL gl);
+	public abstract void apply(GL gl, float amount);
 	
 	public static Rotation parseRotation(String s)
 	{

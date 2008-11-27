@@ -33,6 +33,8 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 	public MidiWindow(File midiFile)
 	{
 		this();
+		
+		// TODO: Load midi data from the file
 	}
 	
 	public MidiWindow()
@@ -43,7 +45,9 @@ public class MidiWindow implements GLEventListener, ActionListener, Constants
 		instrument = VirtualInstrument.loadVirtualInstrument("models/tubular-bells.ins");
 		instrument.assignTextures(materialLibrary);
 		
-		OscilationAnimation ani = new VibrationAnimation(new Position(0, 0, 0.02f));
+		OscilationAnimation ani;
+//		ani = new VibrationAnimation(new Position(0, 0, 0.02f));
+		ani = new PendulumAnimation(AXIS_Y);
 		ani.strike(10);
 		
 		Vector<InstrumentPart> parts = instrument.getAllByRoll("swings");

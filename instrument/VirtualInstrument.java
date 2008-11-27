@@ -79,7 +79,10 @@ public class VirtualInstrument implements Constants
 	
 	public boolean isPatchSupported(int patch)
 	{
-		return supportedPatches.contains((Integer)patch);
+		if (supportedPatches == null)
+			return true;
+		else
+			return supportedPatches.contains((Integer)patch);
 	}
 	
 	public Vector<InstrumentPart> getAllByRoll(String roll)
@@ -137,10 +140,11 @@ public class VirtualInstrument implements Constants
 				// The instruments that we can use this instrument for
 				else if (line.startsWith("patches "))
 				{
-					for (String s : line.substring("patches ".length()).split(" "))
-					{
-						result.supportedPatches.add(Integer.parseInt(s));
-					}
+					if (line.endsWith("all"))
+						result.supportedPatches = null;
+					else
+						for (String s : line.substring("patches ".length()).split(" "))
+							result.supportedPatches.add(Integer.parseInt(s));
 				}
 				// This starts a new object and a new level in the heirarchy
 				else if (line.startsWith("shape "))

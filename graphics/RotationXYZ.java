@@ -54,4 +54,11 @@ public class RotationXYZ extends Rotation
 		gl.glRotatef(ry, 0, 1, 0);
 		gl.glRotatef(rz, 0, 0, 1);
 	}
+	
+	public void apply(GL gl, float amount)
+	{
+		gl.glRotatef(amount*rx, 1, 0, 0);
+		gl.glRotatef(amount*ry, 0, 1, 0);
+		gl.glRotatef(amount*rz, 0, 0, 1);
+	}
 }

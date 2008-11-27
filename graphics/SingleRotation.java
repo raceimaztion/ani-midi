@@ -32,8 +32,12 @@ public class SingleRotation extends Rotation
 	
 	public void apply(GL gl)
 	{
-		//gl.glRotatef((float)Math.toRadians(amount), rx, ry, rz);
 		gl.glRotatef(amount, rx, ry, rz);
+	}
+	
+	public void apply(GL gl, float amount)
+	{
+		gl.glRotatef(this.amount*amount, rx, ry, rz);
 	}
 
 	public float getRotationAmount()

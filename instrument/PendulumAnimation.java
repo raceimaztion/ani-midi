@@ -4,7 +4,6 @@ import graphics.*;
 
 public class PendulumAnimation extends OscilationAnimation implements Constants
 {
-	protected int affectedAxis;
 	protected SingleRotation rotation;
 	
 	/**
@@ -14,7 +13,6 @@ public class PendulumAnimation extends OscilationAnimation implements Constants
 	 */
 	public PendulumAnimation(int axis)
 	{
-		affectedAxis = axis;
 		switch(axis)
 		{
 			case AXIS_X:
@@ -36,7 +34,6 @@ public class PendulumAnimation extends OscilationAnimation implements Constants
 	public PendulumAnimation(PendulumAnimation a)
 	{
 		super(a);
-		affectedAxis = a.affectedAxis;
 		rotation = new SingleRotation(a.rotation);
 	}
 	
