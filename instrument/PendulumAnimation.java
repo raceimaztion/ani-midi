@@ -30,7 +30,8 @@ public class PendulumAnimation extends OscilationAnimation implements Constants
 			default:
 				rotation = new SingleRotation(0, 1, 0, 0);
 		}
-		part.rotation = rotation;
+		// After this, we can simply alter our local copy and things will animate just fine
+		part.rotationOffset = rotation;
 		
 		setSpeed(2);
 	}

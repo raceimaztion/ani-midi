@@ -17,3 +17,4 @@ animation:	The start of an animation for the last object defined.
 step %f %s [etc]:	Information about this step of the animation
 	First float is the time relative to the beginning of this animation that this step applies to 
 	Second parameter is either "rot" or "move", and what comes after is values for it
+end_animation:	The end of an animation

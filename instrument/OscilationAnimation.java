@@ -11,11 +11,12 @@ public abstract class OscilationAnimation extends Animation
 		super(part);
 		
 		offset = velocity = 0;
+		speed = 2;
 	}
 	
 	protected boolean animateStep(float dTime)
 	{
-		velocity += offset*speed*dTime;
+		velocity -= offset*speed*dTime;
 		offset += velocity*dTime;
 		velocity *= (1 - DECAY_RATE*dTime);
 		

@@ -12,8 +12,8 @@ public class MidiTest
 	public static final String FILE_2001 = "midi_files/2001.mid";
 	public static final String FILE_GOOD_BAD_UGLY = "midi_files/Good_Bad_Ugly.mid";
 	public static final String FILE_PINK_PANTHER = "midi_files/Pink_Panther.mid";
-	public static final String FILE_POPCORN = "/home/dvanhumb/Documents/CMPT 365 - Multimedia/assignment1/audio/popcorn.mid";
-	public static final String FILE_STAR_TREK = "midi_files/Star_Trek_First_Contact.mid";
+	public static final String FILE_FIRST_CONTACT = "midi_files/Star_Trek_First_Contact.mid";
+	public static final String FILE_STAR_WARS = "midi_files/Star_Wars.mid";
 	public static final String FILE_ECSTASY_OF_GOLD = "midi_files/The_Ecstasy_Of_Gold.mid";
 	
 	public static final String FILE_NAME = FILE_2001;

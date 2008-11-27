@@ -42,7 +42,7 @@ public class AnimationStep
 		
 		if (line.startsWith("rot "))
 		{
-			return new AnimationStep(time, Rotation.parseresultation(line));
+			return new AnimationStep(time, Rotation.parseRotation(line));
 		}
 		else if (line.startsWith("move "))
 		{

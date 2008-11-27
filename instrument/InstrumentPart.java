@@ -26,8 +26,10 @@ public class InstrumentPart implements Constants
 	protected Vector<InstrumentPart> children;
 	// Part appearance:
 	protected Shape shape;
-	protected Position position, offset;
+	protected Position position;
+	protected Position offset; // TODO need one of these for each note this part is used for
 	protected Rotation rotation;
+	protected Rotation rotationOffset; // TODO need one of these for each note this part is used for
 	
 	// Part attributes:
 	protected String roll;
@@ -66,6 +68,8 @@ public class InstrumentPart implements Constants
 		
 		if (rotation != null)
 			rotation.apply(gl);
+		if (rotationOffset != null)
+			rotationOffset.apply(gl);
 		
 		if (stretchAxis != 0)
 		{

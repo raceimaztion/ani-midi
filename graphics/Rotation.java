@@ -9,7 +9,7 @@ public abstract class Rotation
 	
 	public abstract void apply(GL gl);
 	
-	public static Rotation parseresultation(String s)
+	public static Rotation parseRotation(String s)
 	{
 		Rotation result = null;
 		

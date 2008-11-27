@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import javax.swing.*;
 
 import javax.media.opengl.*;
@@ -7,6 +8,7 @@ import javax.media.opengl.glu.*;
 
 import graphics.*;
 import instrument.*;
+
 
 public class MidiWindow implements GLEventListener, ActionListener
 {
@@ -27,6 +29,12 @@ public class MidiWindow implements GLEventListener, ActionListener
 	protected Light light;
 	protected MaterialLibrary materialLibrary;
 	
+	public MidiWindow(File midiFile)
+	{
+		this();
+		
+	}
+	
 	public MidiWindow()
 	{
 		materialLibrary = new MaterialLibrary("models/instruments");
@@ -36,7 +44,7 @@ public class MidiWindow implements GLEventListener, ActionListener
 		instrument.assignTextures(materialLibrary);
 		
 		InstrumentPart part = instrument.getParts().get(0).getChildren().get(0);
-		PendulumAnimation ani = new PendulumAnimation(part, Constants.AXIS_Y);
+		OscilationAnimation ani = new VibrationAnimation(part, new Position(0, 0, 0.1f));
 		part.setAnimation(ani);
 		ani.strike(10);
 		
@@ -144,7 +152,12 @@ public class MidiWindow implements GLEventListener, ActionListener
 		// Because we're using the heavy-weight GLCanvas, all popups need to be in front of the canvas
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		
-		MidiWindow window = new MidiWindow();
+		JFileChooser fileChooser = new JFileChooser();
+		if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
+			return;
+		File midiFile = fileChooser.getSelectedFile();
+		
+		MidiWindow window = new MidiWindow(midiFile);
 		window.show();
 	}
 }

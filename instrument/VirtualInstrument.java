@@ -64,6 +64,11 @@ public class VirtualInstrument
 			p.draw(gl, 127);
 	}
 	
+	public boolean isPatchSupported(int patch)
+	{
+		return supportedPatches.contains((Integer)patch);
+	}
+	
 	public static VirtualInstrument loadVirtualInstrument(String file)
 	{
 		try
@@ -161,7 +166,7 @@ public class VirtualInstrument
 				else if (line.startsWith("rotation "))
 				{
 					String amount = line.substring("rotation ".length());
-					Rotation rot = Rotation.parseresultation(amount);
+					Rotation rot = Rotation.parseRotation(amount);
 					
 					if (rot != null)
 						stack.peek().rotation = rot;
@@ -177,5 +182,5 @@ public class VirtualInstrument
 		{
 			return null;
 		}
-	}
+	} // end loadVirtualInstrument()
 }
