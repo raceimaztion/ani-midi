@@ -1,0 +1,47 @@
+Warning: It might be necessary to completely rewrite this project from scratch,
+   given that the Midi reading part is completely wrong.
+
+Note also that it might become necessary to write the new version in C++ instead
+   of Java, due to speed concerns.
+
+Goal:
+	- Provide the user a list of instruments and let them choose from
+		a selection of instrument models, shapes and placements.
+		(this could also be random)
+	- Save a set of instrument settings as a file to play it back later
+		(also include the Midi file itself, so we don't have to tell the
+		user to keep them in the same place)
+	- Export the information to some known format that can be imported into at
+		least Blender for rendering as an animation
+	- Play, pause and seek in the song.
+	- Import music from at least Midi files (maybe read from more later)
+
+Possible steps from reading midi file to animating the instruments:
+	1: Load the music file
+	2: Determine if it's an MS Midi file, if so, drop the last couple of tracks
+	3: Use the first stream to determine what time (in seconds, floating-point
+		math) each message is sent
+	4: Find out what instruments are used
+	5: Split out all instrument data into separate objects that contain
+		information about all note-on, note-off signals and determine
+		notes we "slide"
+	6: Use the new streams of data to animate the instruments
+
+Note that steps 1 to 5 are pushed by the loader, while step 6 needs to know what
+   instrument stream is used to control which visualization, and is pulled by the
+   "instrument engine".
+
+Instrument-specific information:
+	- Amount of "spin-up" and "spin-down" time
+		- This determines when lighting for the instrument turns on and off
+	- Mesh objects used
+		- Piece hierarchy
+		- Piece role
+			- Stationary
+			- Struck
+			- Hammer
+			- Pick (for plucking strings)
+			- String
+			- Keyed light (fades in and out when "started" and "stopped")
+		- Textures
+	- File-specific instrument numbers this instrument can be used for
