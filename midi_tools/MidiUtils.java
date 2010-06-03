@@ -68,14 +68,15 @@ public class MidiUtils
 				noteCmd = (ShortMessage)msg;
 				int note = noteCmd.getData1();
 				
-				if (noteCmd.getCommand() == ShortMessage.NOTE_ON)
+				if (noteCmd.getCommand() == ShortMessage.NOTE_ON && noteCmd.getData1() != 0)
 				{
 					noteList[note] = cur.get(j).getTick();
 					noteOn ++;
 					
 					drawLine(g, scale*(int)noteList[note], scale*((int)noteList[note]+1), note);
 				}
-				else if (noteCmd.getCommand() == ShortMessage.NOTE_OFF)
+				else if (noteCmd.getCommand() == ShortMessage.NOTE_OFF ||
+				         (noteCmd.getCommand() == ShortMessage.NOTE_ON && noteCmd.getData1() == 0))
 				{
 					drawLine(g, scale*(int)noteList[note], scale*(int)cur.get(j).getTick(), note);
 					noteList[note] = -1;

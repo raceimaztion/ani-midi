@@ -18,9 +18,13 @@ Goal:
 
 Possible steps from reading midi file to animating the instruments:
 	1: Load the music file
+		Java: javax.sound.midi.MidiSystem.getSequence() for the sequencing data and
+		      javax.sound.midi.MidiSystem.getSoundbank() for a list of all instruments and such used
 	2: Determine if it's an MS Midi file, if so, drop the last couple of tracks
+		Note: Do this while scanning the first track.
 	3: Use the first stream to determine what time (in seconds, floating-point
 		math) each message is sent
+			Note: Really not sure how to do this yet, this may be really complicated or not
 	4: Find out what instruments are used
 	5: Split out all instrument data into separate objects that contain
 		information about all note-on, note-off signals and determine

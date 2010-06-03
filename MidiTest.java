@@ -50,7 +50,7 @@ public class MidiTest
 			System.out.printf("\tLength: %d bytes\n", m.getLength());
 			System.out.print("\t0x");
 			for (byte b : m.getMessage())
-				System.out.printf("%02x", b);
+				System.out.printf("%02x ", b);
 			System.out.println();
 			int type = m.getMessage()[1];
 			if (type == 0)
@@ -64,9 +64,14 @@ public class MidiTest
 			else if (type == 47)
 				System.out.println("\tEnd of track marker.");
 			else if (type == 81)
-				System.out.println("\tTempo information event.");
+			{
+				System.out.print("\tTempo information event.");
+				System.out.printf(" %,d. microseconds per quarter note.\n", (m.getMessage()[3]*256 + m.getMessage()[4])*256 + m.getMessage()[5]);
+			}
 			else if (type == 88)
-				System.out.println("\tTime signature event.");
+			{
+				System.out.printf("\tTime signature event.\n");
+			}
 			else if (type == 89)
 				System.out.println("\tKey signature event.");
 			else if (type == 127)
